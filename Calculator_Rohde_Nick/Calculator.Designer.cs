@@ -26,6 +26,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Calculator));
             this.display = new System.Windows.Forms.TextBox();
             this.seven = new System.Windows.Forms.Button();
             this.eight = new System.Windows.Forms.Button();
@@ -47,6 +48,7 @@
             this.exponentiate = new System.Windows.Forms.Button();
             this.error = new System.Windows.Forms.Label();
             this.resultLabel = new System.Windows.Forms.Label();
+            this.clear = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // display
@@ -206,10 +208,6 @@
             this.enter.Text = "Enter";
             this.enter.UseVisualStyleBackColor = true;
             this.enter.Click += new System.EventHandler(this.verifyInput);
-
-            // Accept button
-            this.AcceptButton = enter;
-
             // 
             // minus
             // 
@@ -261,11 +259,23 @@
             this.resultLabel.Text = "result";
             this.resultLabel.Visible = false;
             // 
+            // clear
+            // 
+            this.clear.Location = new System.Drawing.Point(250, 278);
+            this.clear.Name = "clear";
+            this.clear.Size = new System.Drawing.Size(80, 40);
+            this.clear.TabIndex = 21;
+            this.clear.Text = "Clear";
+            this.clear.UseVisualStyleBackColor = true;
+            this.clear.Click += new System.EventHandler(this.clearPress);
+            // 
             // Calculator
             // 
+            this.AcceptButton = this.enter;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(387, 344);
+            this.Controls.Add(this.clear);
             this.Controls.Add(this.resultLabel);
             this.Controls.Add(this.error);
             this.Controls.Add(this.exponentiate);
@@ -287,6 +297,8 @@
             this.Controls.Add(this.eight);
             this.Controls.Add(this.seven);
             this.Controls.Add(this.display);
+            this.Cursor = System.Windows.Forms.Cursors.Default;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Calculator";
             this.Text = "Calculator";
             this.ResumeLayout(false);
@@ -315,6 +327,7 @@
         private System.Windows.Forms.Button exponentiate;
         private System.Windows.Forms.Label error;
         private System.Windows.Forms.Label resultLabel;
+        private System.Windows.Forms.Button clear;
     }
 }
 
