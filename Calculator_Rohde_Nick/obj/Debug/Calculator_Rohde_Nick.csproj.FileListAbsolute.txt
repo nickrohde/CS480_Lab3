@@ -1,0 +1,9 @@
+C:\Users\nicol\Desktop\Stuff\school\Fall17\CS480\Lab 3\Calculator_Rohde_Nick\Calculator_Rohde_Nick\bin\Debug\Calculator_Rohde_Nick.exe.config
+C:\Users\nicol\Desktop\Stuff\school\Fall17\CS480\Lab 3\Calculator_Rohde_Nick\Calculator_Rohde_Nick\bin\Debug\Calculator_Rohde_Nick.exe
+C:\Users\nicol\Desktop\Stuff\school\Fall17\CS480\Lab 3\Calculator_Rohde_Nick\Calculator_Rohde_Nick\bin\Debug\Calculator_Rohde_Nick.pdb
+C:\Users\nicol\Desktop\Stuff\school\Fall17\CS480\Lab 3\Calculator_Rohde_Nick\Calculator_Rohde_Nick\obj\Debug\Calculator_Rohde_Nick.csprojResolveAssemblyReference.cache
+C:\Users\nicol\Desktop\Stuff\school\Fall17\CS480\Lab 3\Calculator_Rohde_Nick\Calculator_Rohde_Nick\obj\Debug\Calculator_Rohde_Nick.Calculator.resources
+C:\Users\nicol\Desktop\Stuff\school\Fall17\CS480\Lab 3\Calculator_Rohde_Nick\Calculator_Rohde_Nick\obj\Debug\Calculator_Rohde_Nick.Properties.Resources.resources
+C:\Users\nicol\Desktop\Stuff\school\Fall17\CS480\Lab 3\Calculator_Rohde_Nick\Calculator_Rohde_Nick\obj\Debug\Calculator_Rohde_Nick.csproj.GenerateResource.Cache
+C:\Users\nicol\Desktop\Stuff\school\Fall17\CS480\Lab 3\Calculator_Rohde_Nick\Calculator_Rohde_Nick\obj\Debug\Calculator_Rohde_Nick.exe
+C:\Users\nicol\Desktop\Stuff\school\Fall17\CS480\Lab 3\Calculator_Rohde_Nick\Calculator_Rohde_Nick\obj\Debug\Calculator_Rohde_Nick.pdb
