@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Text.RegularExpressions;
 
 namespace Calculator_Rohde_Nick
 {
@@ -18,5 +17,6 @@ namespace Calculator_Rohde_Nick
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Calculator());
         }
+
     }
 }

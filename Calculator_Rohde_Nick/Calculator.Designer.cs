@@ -49,18 +49,25 @@
             this.error = new System.Windows.Forms.Label();
             this.resultLabel = new System.Windows.Forms.Label();
             this.clear = new System.Windows.Forms.Button();
+            this.period = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // display
             // 
-            this.display.Location = new System.Drawing.Point(47, 15);
+            this.display.Location = new System.Drawing.Point(26, 15);
             this.display.Name = "display";
             this.display.Size = new System.Drawing.Size(292, 20);
             this.display.TabIndex = 0;
+            this.display.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.keyboardPress);
             // 
             // seven
             // 
-            this.seven.Location = new System.Drawing.Point(51, 102);
+            this.seven.Location = new System.Drawing.Point(25, 123);
             this.seven.Name = "seven";
             this.seven.Size = new System.Drawing.Size(40, 40);
             this.seven.TabIndex = 1;
@@ -70,17 +77,18 @@
             // 
             // eight
             // 
-            this.eight.Location = new System.Drawing.Point(116, 102);
+            this.eight.Location = new System.Drawing.Point(90, 123);
             this.eight.Name = "eight";
             this.eight.Size = new System.Drawing.Size(40, 40);
             this.eight.TabIndex = 2;
             this.eight.Text = "8";
             this.eight.UseVisualStyleBackColor = true;
             this.eight.Click += new System.EventHandler(this.digit8Press);
+            this.eight.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.keyboardPress);
             // 
             // nine
             // 
-            this.nine.Location = new System.Drawing.Point(178, 102);
+            this.nine.Location = new System.Drawing.Point(152, 123);
             this.nine.Name = "nine";
             this.nine.Size = new System.Drawing.Size(40, 40);
             this.nine.TabIndex = 3;
@@ -90,7 +98,7 @@
             // 
             // plus
             // 
-            this.plus.Location = new System.Drawing.Point(242, 134);
+            this.plus.Location = new System.Drawing.Point(216, 155);
             this.plus.Name = "plus";
             this.plus.Size = new System.Drawing.Size(40, 40);
             this.plus.TabIndex = 4;
@@ -100,7 +108,7 @@
             // 
             // divide
             // 
-            this.divide.Location = new System.Drawing.Point(242, 180);
+            this.divide.Location = new System.Drawing.Point(216, 201);
             this.divide.Name = "divide";
             this.divide.Size = new System.Drawing.Size(40, 40);
             this.divide.TabIndex = 5;
@@ -110,7 +118,7 @@
             // 
             // four
             // 
-            this.four.Location = new System.Drawing.Point(51, 160);
+            this.four.Location = new System.Drawing.Point(25, 181);
             this.four.Name = "four";
             this.four.Size = new System.Drawing.Size(40, 40);
             this.four.TabIndex = 6;
@@ -120,7 +128,7 @@
             // 
             // five
             // 
-            this.five.Location = new System.Drawing.Point(116, 160);
+            this.five.Location = new System.Drawing.Point(90, 181);
             this.five.Name = "five";
             this.five.Size = new System.Drawing.Size(40, 40);
             this.five.TabIndex = 7;
@@ -130,7 +138,7 @@
             // 
             // six
             // 
-            this.six.Location = new System.Drawing.Point(178, 160);
+            this.six.Location = new System.Drawing.Point(152, 181);
             this.six.Name = "six";
             this.six.Size = new System.Drawing.Size(40, 40);
             this.six.TabIndex = 8;
@@ -140,7 +148,7 @@
             // 
             // openP
             // 
-            this.openP.Location = new System.Drawing.Point(242, 226);
+            this.openP.Location = new System.Drawing.Point(216, 247);
             this.openP.Name = "openP";
             this.openP.Size = new System.Drawing.Size(40, 40);
             this.openP.TabIndex = 9;
@@ -150,7 +158,7 @@
             // 
             // three
             // 
-            this.three.Location = new System.Drawing.Point(178, 217);
+            this.three.Location = new System.Drawing.Point(152, 238);
             this.three.Name = "three";
             this.three.Size = new System.Drawing.Size(40, 40);
             this.three.TabIndex = 10;
@@ -160,7 +168,7 @@
             // 
             // two
             // 
-            this.two.Location = new System.Drawing.Point(116, 217);
+            this.two.Location = new System.Drawing.Point(90, 238);
             this.two.Name = "two";
             this.two.Size = new System.Drawing.Size(40, 40);
             this.two.TabIndex = 11;
@@ -171,7 +179,7 @@
             // one
             // 
             this.one.AccessibleName = "One Button";
-            this.one.Location = new System.Drawing.Point(51, 217);
+            this.one.Location = new System.Drawing.Point(25, 238);
             this.one.Name = "one";
             this.one.Size = new System.Drawing.Size(40, 40);
             this.one.TabIndex = 12;
@@ -181,9 +189,9 @@
             // 
             // zero
             // 
-            this.zero.Location = new System.Drawing.Point(51, 278);
+            this.zero.Location = new System.Drawing.Point(25, 299);
             this.zero.Name = "zero";
-            this.zero.Size = new System.Drawing.Size(80, 40);
+            this.zero.Size = new System.Drawing.Size(40, 40);
             this.zero.TabIndex = 13;
             this.zero.Text = "0";
             this.zero.UseVisualStyleBackColor = true;
@@ -191,7 +199,7 @@
             // 
             // times
             // 
-            this.times.Location = new System.Drawing.Point(299, 180);
+            this.times.Location = new System.Drawing.Point(273, 201);
             this.times.Name = "times";
             this.times.Size = new System.Drawing.Size(40, 40);
             this.times.TabIndex = 14;
@@ -201,17 +209,18 @@
             // 
             // enter
             // 
-            this.enter.Location = new System.Drawing.Point(146, 278);
+            this.enter.Location = new System.Drawing.Point(176, 299);
             this.enter.Name = "enter";
             this.enter.Size = new System.Drawing.Size(80, 40);
             this.enter.TabIndex = 15;
             this.enter.Text = "Enter";
             this.enter.UseVisualStyleBackColor = true;
             this.enter.Click += new System.EventHandler(this.verifyInput);
+            this.enter.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.keyboardPress);
             // 
             // minus
             // 
-            this.minus.Location = new System.Drawing.Point(299, 134);
+            this.minus.Location = new System.Drawing.Point(273, 155);
             this.minus.Name = "minus";
             this.minus.Size = new System.Drawing.Size(40, 40);
             this.minus.TabIndex = 16;
@@ -221,7 +230,7 @@
             // 
             // closeP
             // 
-            this.closeP.Location = new System.Drawing.Point(299, 226);
+            this.closeP.Location = new System.Drawing.Point(273, 247);
             this.closeP.Name = "closeP";
             this.closeP.Size = new System.Drawing.Size(40, 40);
             this.closeP.TabIndex = 17;
@@ -231,7 +240,7 @@
             // 
             // exponentiate
             // 
-            this.exponentiate.Location = new System.Drawing.Point(269, 88);
+            this.exponentiate.Location = new System.Drawing.Point(245, 109);
             this.exponentiate.Name = "exponentiate";
             this.exponentiate.Size = new System.Drawing.Size(40, 40);
             this.exponentiate.TabIndex = 18;
@@ -242,7 +251,8 @@
             // error
             // 
             this.error.AutoSize = true;
-            this.error.Location = new System.Drawing.Point(50, 37);
+            this.error.ForeColor = System.Drawing.Color.Red;
+            this.error.Location = new System.Drawing.Point(29, 43);
             this.error.Name = "error";
             this.error.Size = new System.Drawing.Size(53, 13);
             this.error.TabIndex = 19;
@@ -252,29 +262,94 @@
             // resultLabel
             // 
             this.resultLabel.AutoSize = true;
-            this.resultLabel.Location = new System.Drawing.Point(87, 59);
+            this.resultLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.resultLabel.Location = new System.Drawing.Point(42, 63);
             this.resultLabel.Name = "resultLabel";
-            this.resultLabel.Size = new System.Drawing.Size(32, 13);
+            this.resultLabel.Size = new System.Drawing.Size(43, 17);
             this.resultLabel.TabIndex = 20;
             this.resultLabel.Text = "result";
             this.resultLabel.Visible = false;
             // 
             // clear
             // 
-            this.clear.Location = new System.Drawing.Point(250, 278);
+            this.clear.Location = new System.Drawing.Point(325, 4);
             this.clear.Name = "clear";
             this.clear.Size = new System.Drawing.Size(80, 40);
             this.clear.TabIndex = 21;
-            this.clear.Text = "Clear";
+            this.clear.Text = "Clear (Esc)";
             this.clear.UseVisualStyleBackColor = true;
             this.clear.Click += new System.EventHandler(this.clearPress);
+            // 
+            // period
+            // 
+            this.period.Location = new System.Drawing.Point(90, 299);
+            this.period.Name = "period";
+            this.period.Size = new System.Drawing.Size(40, 40);
+            this.period.TabIndex = 22;
+            this.period.Text = ".";
+            this.period.UseVisualStyleBackColor = true;
+            this.period.Click += new System.EventHandler(this.periodPress);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(239, 93);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(56, 13);
+            this.label1.TabIndex = 24;
+            this.label1.Text = "Operators:";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(321, 93);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(84, 13);
+            this.label2.TabIndex = 25;
+            this.label2.Text = "Special Buttons:";
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(324, 123);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(80, 40);
+            this.button2.TabIndex = 26;
+            this.button2.Text = "Insert Result";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.insertAnswer);
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(324, 181);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(80, 40);
+            this.button3.TabIndex = 27;
+            this.button3.Text = "Insert Pi";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.insertPi);
+            // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(324, 238);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(80, 40);
+            this.button4.TabIndex = 28;
+            this.button4.Text = "Insert e";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.insertE);
             // 
             // Calculator
             // 
             this.AcceptButton = this.enter;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(387, 344);
+            this.ClientSize = new System.Drawing.Size(417, 366);
+            this.Controls.Add(this.button4);
+            this.Controls.Add(this.button3);
+            this.Controls.Add(this.button2);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.period);
             this.Controls.Add(this.clear);
             this.Controls.Add(this.resultLabel);
             this.Controls.Add(this.error);
@@ -301,6 +376,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Calculator";
             this.Text = "Calculator";
+            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.keyboardPress);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -328,6 +404,12 @@
         private System.Windows.Forms.Label error;
         private System.Windows.Forms.Label resultLabel;
         private System.Windows.Forms.Button clear;
+        private System.Windows.Forms.Button period;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button button4;
     }
 }
 
