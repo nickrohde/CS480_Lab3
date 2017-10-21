@@ -49,7 +49,7 @@ namespace Calculator_Rohde_Nick
             Stack<string> stack = new Stack<string>();
 
             Regex operators = new Regex("[-+/*^]"), // regex to detect arithmetic operators
-                  numbers   = new Regex("[0-9.]")  ; // regex to detect numbers
+                  numbers   = new Regex("[0-9.]") ; // regex to detect numbers
 
 
             // Variables
@@ -74,12 +74,13 @@ namespace Calculator_Rohde_Nick
             {
                 if(input[i] == ' ')
                 {
+                    i++;
                     continue; // ignore spaces
                 } // end if
-                else if (numbers.IsMatch(input[i].ToString()))// parse number into string
+                else if (numbers.IsMatch(input[i].ToString()) || input[i] == '.')// parse number into string
                 {
                     string temp = "";
-                    while (numbers.IsMatch(input[i].ToString()))
+                    while (numbers.IsMatch(input[i].ToString()) || input[i] == '.')
                     {
                         temp += input[i].ToString();
                         if (i < input.Length-1)
@@ -105,9 +106,9 @@ namespace Calculator_Rohde_Nick
                     while(stack.Count > 0 && stack.Peek() != ")")
                     {
                         string temp = "";
-                        if (numbers.IsMatch(stack.Peek()))
+                        if (numbers.IsMatch(stack.Peek()) || stack.Peek() == ".")
                         {
-                            while (numbers.IsMatch(stack.Peek()))
+                            while (stack.Count > 0 && (numbers.IsMatch(stack.Peek()) || stack.Peek() == "."))
                             {
                                 temp += stack.Pop();
                             } // end while
@@ -132,18 +133,14 @@ namespace Calculator_Rohde_Nick
                     } // end if
                     else
                     {
-                        int operatorIndex = 0;
-
                         while(stack.Count != 0 && stack.Peek() != "(")
                         {
                             if (((input[i] == '*' || input[i] == '/') && (stack.Peek() == "+" || stack.Peek() == "-")))
                             {
-                                operatorIndex = i;
                                 break;
                             } // end if
                             if ((input[i] == '^' && (stack.Peek() == "+" || stack.Peek() == "-" || stack.Peek() == "*" || stack.Peek() == "/")))
                             {
-                                operatorIndex = i;
                                 break;
                             } // end if
 
@@ -165,12 +162,9 @@ namespace Calculator_Rohde_Nick
                             expression += " ";
                         } // end while
 
-                        stack.Push(input[operatorIndex].ToString());
+                        stack.Push(input[i].ToString());
 
                     } // end else
-                    expression += input[i].ToString();
-                    expression += " ";
-                    Console.Out.WriteLine(expression);
                 } // end elif
                 i++;
             } // end while
@@ -181,7 +175,7 @@ namespace Calculator_Rohde_Nick
 
                 if (numbers.IsMatch(stack.Peek()))
                 {
-                    while (numbers.IsMatch(stack.Peek()))
+                    while (stack.Count > 0 && numbers.IsMatch(stack.Peek()))
                     {
                         temp += stack.Pop();
                     } // end while
@@ -192,8 +186,11 @@ namespace Calculator_Rohde_Nick
                 } // end else
 
                 expression += temp;
-                expression += " ";
-            }
+                if (stack.Count != 0)
+                {
+                    expression += " ";
+                } // end if
+            } // end while
 
             evaluateExpression(expression);
                 
@@ -281,14 +278,64 @@ namespace Calculator_Rohde_Nick
 
         } // end method isValidExpression
 
-        private void evaluateExpression(string expression)
+        private void evaluateExpression(string input)
         {
+            if(input.Length == 0)
+            {
+                throw new ArgumentException();
+            }
+
+            // Objects
+            Stack<double> stack = new Stack<double>();
+
+
+            // Variables
             double result = 0;
 
+            string[] expression = input.Split();
 
+            for(int i = 0; i < expression.Length; i++)
+            {
+                double temp = 0;
+                if(double.TryParse(expression[i], out temp))
+                {
+                    stack.Push(temp);
+                } // end if
 
-            resultLabel.Text = result.ToString();
-        }
+                else
+                {
+                    double a = stack.Pop(),
+                           b = stack.Pop();
+
+                    switch(expression[i])
+                    {
+                        case ("+"):
+                            stack.Push(b + a);
+                            break;
+                        case ("-"):
+                            stack.Push(b - a);
+                            break;
+                        case ("*"):
+                            stack.Push(b * a);
+                            break;
+                        case ("/"):
+                            stack.Push(b / a);
+                            break;
+                        case ("^"):
+                            stack.Push(Math.Pow(b,a));
+                            break;
+                        default:
+                            throw new ArgumentException();
+                    } // end switch
+                } // end if
+            } // end for
+
+            result = stack.Pop();
+            resultLabel.Text = display.Text;
+            resultLabel.Text += " = ";
+            resultLabel.Text += result.ToString();
+            resultLabel.Visible = true;
+        } // end method evaluateExpression
 
         // Button click handlers
         private void digit0Press    (object sender, EventArgs e)
