@@ -55,7 +55,10 @@ namespace Calculator_Rohde_Nick
             // Variables
             string expression = "";
 
+            int    i          = 0 ;
 
+
+            // check if expression is valid
             try
             {
                 isValidExpression(input);
@@ -67,16 +70,32 @@ namespace Calculator_Rohde_Nick
             } // end catch
             
             // turn infix expression into postfix expression
-            for(int i = 0; i < input.Length; i++)
+            while(i < input.Length)
             {
                 if(input[i] == ' ')
                 {
                     continue; // ignore spaces
-                }
-                else if (operators.IsMatch(input[i].ToString()))
-                {
-                    expression += input[i].ToString() + " ";
                 } // end if
+                else if (numbers.IsMatch(input[i].ToString()))// parse number into string
+                {
+                    string temp = "";
+                    while (numbers.IsMatch(input[i].ToString()))
+                    {
+                        temp += input[i].ToString();
+                        if (i < input.Length-1)
+                        {
+                            i++;
+                        } // end if
+                        else
+                        {
+                            i++;
+                            break; 
+                        }
+                    } // end while
+                    expression += temp;
+                    expression += " ";
+                    continue;
+                } // end else
                 else if (input[i] == '(')
                 {
                     stack.Push(input[i].ToString());
@@ -91,24 +110,90 @@ namespace Calculator_Rohde_Nick
                             while (numbers.IsMatch(stack.Peek()))
                             {
                                 temp += stack.Pop();
-                                
-                            }
-                        }
+                            } // end while
+                        } // end if
                         else
                         {
                             temp = stack.Pop();
-                        }
-                        display.Text += temp;
-                        expression += temp + " ";
+                        } // end else
+
+                        temp += " ";
+                        expression += temp;
+                        Console.Out.WriteLine(expression);
                     } // end while
                     
                     stack.Pop(); // pop left parenthesis off the stack
                 } // end elif
-                else if (numbers.IsMatch(input[i].ToString()))// parse number into string
+                else if (operators.IsMatch(input[i].ToString()))
                 {
-                    
+                    if(stack.Count == 0 || stack.Peek() == "(")
+                    {
+                        stack.Push(input[i].ToString());
+                    } // end if
+                    else
+                    {
+                        int operatorIndex = 0;
+
+                        while(stack.Count != 0 && stack.Peek() != "(")
+                        {
+                            if (((input[i] == '*' || input[i] == '/') && (stack.Peek() == "+" || stack.Peek() == "-")))
+                            {
+                                operatorIndex = i;
+                                break;
+                            } // end if
+                            if ((input[i] == '^' && (stack.Peek() == "+" || stack.Peek() == "-" || stack.Peek() == "*" || stack.Peek() == "/")))
+                            {
+                                operatorIndex = i;
+                                break;
+                            } // end if
+
+                            string temp = "";
+
+                            if (numbers.IsMatch(stack.Peek()))
+                            {
+                                while (numbers.IsMatch(stack.Peek()))
+                                {
+                                    temp += stack.Pop();
+                                } // end while
+                            } // end if
+                            else
+                            {
+                                temp = stack.Pop();
+                            } // end else
+
+                            expression += temp;
+                            expression += " ";
+                        } // end while
+
+                        stack.Push(input[operatorIndex].ToString());
+
+                    } // end else
+                    expression += input[i].ToString();
+                    expression += " ";
+                    Console.Out.WriteLine(expression);
+                } // end elif
+                i++;
+            } // end while
+
+            while(stack.Count > 0)
+            {
+                string temp = "";
+
+                if (numbers.IsMatch(stack.Peek()))
+                {
+                    while (numbers.IsMatch(stack.Peek()))
+                    {
+                        temp += stack.Pop();
+                    } // end while
+                } // end if
+                else
+                {
+                    temp = stack.Pop();
                 } // end else
-            } // end for
+
+                expression += temp;
+                expression += " ";
+            }
 
             evaluateExpression(expression);
                 
@@ -123,7 +208,7 @@ namespace Calculator_Rohde_Nick
 
             // Variables
             bool noOperator = true                , // keeps track of whether an operator is allowed
-                 noPeriod   = true                ; // keeps track of whether a period is allowed
+                 noPeriod   = false               ; // keeps track of whether a period is allowed
 
             uint open       = 0                   ; // keeps track of open parentheses
 
@@ -132,7 +217,7 @@ namespace Calculator_Rohde_Nick
             if(input[0] == '-')
             {
                 noOperator = false;
-            }
+            } // end if
 
             // verify this is a valid expression
             for (int i = 0; i < input.Length; i++)
@@ -140,7 +225,15 @@ namespace Calculator_Rohde_Nick
                 if(input[i] == ' ')
                 {
                     continue; // ignore spaces
-                }
+                } // end if
+                else if(input[i] == '.')
+                {
+                    if(noPeriod)
+                    {
+                        throw new ArgumentException();
+                    } // end if
+                    noPeriod = true;
+                } // end elif
                 else if (operators.IsMatch(input[i].ToString()))
                 {
                     if (noOperator)
@@ -149,11 +242,13 @@ namespace Calculator_Rohde_Nick
                     } // end if
 
                     noOperator = true; // next character can't be an operator
-                } // end if
+                    noPeriod = false;
+                } // end elif
                 else if (input[i] == '(')
                 {
                     open++;
                     noOperator = true; // open parenthesis can't be followed by operator
+                    noPeriod = false;
                 } // end elif
                 else if (input[i] == ')')
                 {
@@ -166,6 +261,7 @@ namespace Calculator_Rohde_Nick
                         throw new ArgumentException();
                     } // end else
                     noOperator = false; // next character can be an operator
+                    noPeriod = false;
                 } // end elif
                 else if (numbers.IsMatch(input[i].ToString()))// parse number into string
                 {
@@ -176,7 +272,13 @@ namespace Calculator_Rohde_Nick
                 {
                     throw new ArgumentException();
                 } // end else
-            }// end for  
+            }// end for
+
+            if(noOperator)
+            {
+                throw new ArgumentException();
+            } // end if
+
         } // end method isValidExpression
 
         private void evaluateExpression(string expression)
