@@ -82,14 +82,12 @@ namespace Calculator_Rohde_Nick
         // Parses input turning the infix into postfix, then sends the postfix to evaluateInput
         private void parseInput(string input)
         {
-            // Objects
+            // Variables
             Stack<string> stack = new Stack<string>();
 
             Regex operators   = new Regex("[-+/*^]"), // regex to detect arithmetic operators
                   numbers     = new Regex("[0-9.]") ; // regex to detect numbers
 
-
-            // Variables
             string expression = ""                  ;
 
             int    i          = 0                   ;
@@ -101,9 +99,9 @@ namespace Calculator_Rohde_Nick
                 input = isValidExpression(input);
                 
             } // end try
-            catch (ArgumentException e)
+            catch (Exception e)
             {
-                throw e; // handled by verifyInput
+                throw e; // exceptions are handled by verifyInput
             } // end catch
             
             // turn infix expression into postfix expression
@@ -679,9 +677,9 @@ namespace Calculator_Rohde_Nick
                 if(c_temp == '\u001b')
                 {
                     display.Text = "";
-                }
+                } // end if
                 return;
-            }
+            } // end if
             
             switch(c_temp)
             {
@@ -735,9 +733,7 @@ namespace Calculator_Rohde_Nick
                     break;
                 default:
                     break;
-            }
-        }
-
-        
+            } // end switch
+        } // end method keyboardPress 
     } // end class Calculator
 } // end namespace Calculator
