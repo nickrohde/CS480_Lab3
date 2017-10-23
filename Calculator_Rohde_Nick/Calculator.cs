@@ -33,23 +33,37 @@ namespace Calculator_Rohde_Nick
                     parseInput(display.Text); // parse input
                     error.Visible = false;
                 } // end try
-
+                // handle invalid expression errors
                 catch (ArgumentException exception) // invalid expression
                 {
                     handleArgException(exception);
                     error.Text = "Invalid expression received, try again.";
                     error.Visible = true;
                 } // end catch
-                
+                // handle division by 0 errors
                 catch (DivideByZeroException)
                 {
                     handleDivByZeroException();
                     error.Text = "Your expression contains a division by 0. This is not allowed.";
                     error.Visible = true;
-                }
+                } // end catch
+                // handle invalid operation errors
+                catch (InvalidOperationException exception)
+                {
+                    handleInvalidOperationException(exception);
+                    error.Text = "Your expression contains an invalid operation, try again.";
+                    error.Visible = true;
+                } // end catch
+                // handle all other exception that might occur
+                catch (Exception exception)
+                {
+                    handleUnknownException(exception);
+                    error.Text = "Your expression could not be evaluated, try again.";
+                    error.Visible = true;
+                } // end catch
             } // end if 
 
-            else // illegal characters detected
+            else // illegal characters detected by regex
             {
                 MessageBox.Show("The expression you entered contains illegal characters." +
                                 "\n\nLegal characters:\n    Digits: 0-9\n    Operators: + - * / ^ " +
@@ -256,8 +270,6 @@ namespace Calculator_Rohde_Nick
             // verify this is a valid expression
             for (int i = 0; i < input.Length; i++)
             {
-
-
                 if(input[i] == ' ')
                 {
                     continue; // ignore spaces
@@ -344,7 +356,12 @@ namespace Calculator_Rohde_Nick
                 } // end else
             }// end for
 
-            if(noOperator)
+            if (open > 0)
+            {
+                throw new ArgumentException("-1 " + input);
+            }
+
+            if (noOperator)
             {
                 throw new ArgumentException("-1 " + input);
             } // end if
@@ -412,6 +429,10 @@ namespace Calculator_Rohde_Nick
                             }
                             break;
                         case ("^"):
+                            if (a == 0 && b == 0)
+                            {
+                                throw new ArithmeticException("0^0");
+                            }
                             stack.Push(Math.Pow(b,a));
                             break;
                         default:
@@ -442,53 +463,57 @@ namespace Calculator_Rohde_Nick
         // ArgumentException handler
         private void handleArgException(ArgumentException exception)
         {
-            int index = 0;
+            // Variables
+            int    i_index        = 0                                                    ;
 
-            string errorMessage = "There was an issue with the expression you entered.";
+            string s_errorMessage = "There was an issue with the expression you entered.";
 
-            string[] message    = exception.Message.Split();
+            string[] sa_message   = exception.Message.Split()                            ;
 
 
-            if (!(int.TryParse(message[0], out index)))
+            if ((sa_message.Length > 0) && !(int.TryParse(sa_message[0], out i_index)))
             {
-                MessageBox.Show(errorMessage + " Please try again.", "Invalid expression!");
+                MessageBox.Show(s_errorMessage + " Please try again.", "Invalid expression!");
                 return;
             }
 
-            if (index == -1 || message.Length != 2)
+            if (sa_message.Length != 2)
             {
-                MessageBox.Show(errorMessage + " Please try again.", "Invalid Expression!");
+                MessageBox.Show(s_errorMessage + " Please try again.", "Invalid Expression!");
                 return;
             }
 
-            errorMessage += " The error occured at the ";
-
-            index++;
-
-            errorMessage += index.ToString();
-
-            if(index == 1)
+            if (i_index > 0)
             {
-                errorMessage += "st";
-            }
-            else if (index == 2)
-            {
-                errorMessage += "nd";
-            }
-            else if(index == 3)
-            {
-                errorMessage += "rd";
-            }
-            else
-            {
-                errorMessage += "th";
+                s_errorMessage += " The error occured at the ";
+
+                i_index++;
+
+                s_errorMessage += i_index.ToString();
+
+                switch (i_index)
+                {
+                    case (1):
+                        s_errorMessage += "st";
+                        break;
+                    case (2):
+                        s_errorMessage += "nd";
+                        break;
+                    case (3):
+                        s_errorMessage += "rd";
+                        break;
+                    default:
+                        s_errorMessage += "th";
+                        break;
+                }
+
+                s_errorMessage += " postion in the expression.";
             }
 
-            errorMessage += " postion in the expression.";
-            errorMessage += "\n\nThe expression was interpreted as: " + message[1];
-            errorMessage += "\n\nPlease check the expression, and try again.";
+            s_errorMessage += "\n\nThe expression was interpreted as: " + sa_message[1];
+            s_errorMessage += "\n\nPlease check the expression, and try again.";
 
-            MessageBox.Show(errorMessage, "Invalid Expression!");
+            MessageBox.Show(s_errorMessage, "Invalid Expression!");
 
         } // end method handleArgException
 
@@ -498,6 +523,29 @@ namespace Calculator_Rohde_Nick
         {
             MessageBox.Show("The expression you entered contains a division by 0. This is not a legal operation. Please try again.", "Divison by 0 in Expression!");
         } // end method handleDivByZeroException
+
+
+        // Invalid Operation Handler
+        private void handleInvalidOperationException(InvalidOperationException e)
+        {
+            if (e.Message == "0^0")
+            {
+                resultLabel.Text = display.Text + " = NaN";
+                resultLabel.Visible = true;
+            }
+
+            MessageBox.Show("The expression you entered contains an invalid operation, and cannot be evaluated. Please try again.", "Invalid Operation in Expression!");
+        }
+
+
+        // Unknown exception handler
+        private void handleUnknownException(Exception e)
+        {
+            string message = "The expression you entered could not be evaluated.\n\nReason:\n";
+            message += e.Message;
+            message += "\n\nPlease try again.";
+            MessageBox.Show(message, "There was a problem with your expression.");
+        }
 
 
         // Button click event handlers:
@@ -616,18 +664,18 @@ namespace Calculator_Rohde_Nick
         // Key press event handler
         private void keyboardPress  (object sender, KeyPressEventArgs e)
         {
-            char temp = e.KeyChar;
+            char c_temp = e.KeyChar;
 
             if(sender.Equals(display))
             {
-                if(temp == '\u001b')
+                if(c_temp == '\u001b')
                 {
                     display.Text = "";
                 }
                 return;
             }
             
-            switch(temp)
+            switch(c_temp)
             {
                 case ('0'):
                     display.Text += "0";
