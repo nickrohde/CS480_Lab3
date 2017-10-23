@@ -14,16 +14,21 @@ namespace Calculator_Rohde_Nick
         {
             InitializeComponent();
             previousAnswer = 0;
-
         } // end default constructor
 
 
         // Verifies the user input, and then sends it off to be parsed, and evaluated
         private void verifyInput(object sender, EventArgs e)
         {
-            // Objects
+            // Variables
             Regex regex = new Regex("[0-9-+/*()^.]"); // used to initially verify input
 
+
+            if (display.Text.Length == 0)
+            {
+                handleArgException(new ArgumentException("-1 -1"));
+                return;
+            }
 
             // filter out illegal characters with regex
             if (regex.IsMatch(display.Text))
@@ -238,12 +243,10 @@ namespace Calculator_Rohde_Nick
         // Verifies the expression entered is syntactically valid
         private string isValidExpression(string input)
         {
-            // Objects
+            // Variables
             Regex operators = new Regex("[-+/*^]"), // regex to detect arithmetic operators
                   numbers   = new Regex("[0-9]")  ; // regex to detect numbers
-
-
-            // Variables
+            
             bool noOperator           = true      , // keeps track of whether an operator is allowed
                  noPeriod             = false     , // keeps track of whether a period is allowed
                  omittedMultiplyStart = false     , // handles the case a(b) = a*(b)
@@ -367,7 +370,6 @@ namespace Calculator_Rohde_Nick
             } // end if
 
             return input;
-
         } // end method isValidExpression
 
 
@@ -376,17 +378,16 @@ namespace Calculator_Rohde_Nick
         {
             if(input.Length == 0)
             {
-                throw new ArgumentException("-1");
+                throw new ArgumentException("-1 No expression was entered.");
             }
 
-            // Objects
+            // Variables
             Stack<double> stack = new Stack<double>();
 
-
-            // Variables
             double result = 0;
 
             string[] expression = input.Split();
+
 
             for(int i = 0; i < expression.Length; i++)
             {
@@ -480,6 +481,13 @@ namespace Calculator_Rohde_Nick
             if (sa_message.Length != 2)
             {
                 MessageBox.Show(s_errorMessage + " Please try again.", "Invalid Expression!");
+                return;
+            }
+
+            if (sa_message[1] == "-1")
+            {
+                s_errorMessage += "\n\nNo expression was entered.";
+                MessageBox.Show(s_errorMessage, "Invalid Expression!");
                 return;
             }
 
