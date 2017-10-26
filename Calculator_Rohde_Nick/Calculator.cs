@@ -7,7 +7,6 @@ namespace Calculator_Rohde_Nick
 {
     public partial class Calculator : Form
     {
-
         public Calculator()
         {
             InitializeComponent();
@@ -336,7 +335,7 @@ namespace Calculator_Rohde_Nick
             if(input.Length == 0)
             {
                 throw new ArgumentException("-1 No expression was entered.");
-            }
+            } // end if
 
             // Variables
             Stack<double> stack = new Stack<double>();
@@ -351,7 +350,7 @@ namespace Calculator_Rohde_Nick
                 if(expression[i] == " " || expression[i] == "")
                 {
                     continue;
-                }
+                } // end if
 
                 double temp = 0;
 
@@ -380,17 +379,17 @@ namespace Calculator_Rohde_Nick
                             if (a == 0)
                             {
                                 throw new DivideByZeroException();
-                            }
+                            } // end if
                             else
                             {
                                 stack.Push(b / a);
-                            }
+                            } // end else
                             break;
                         case ("^"):
                             if (a == 0 && b == 0)
                             {
                                 throw new ArithmeticException("0^0");
-                            }
+                            } // end if
                             stack.Push(Math.Pow(b,a));
                             break;
                         default:
@@ -406,31 +405,31 @@ namespace Calculator_Rohde_Nick
             if(resultLabel.Text.Length > 70)
             {
                 resultLabel.Font = new System.Drawing.Font("Lucida Bright", 7, System.Drawing.FontStyle.Bold);
-            }
+            } // end if
             else if(resultLabel.Text.Length > 60)
             {
                 resultLabel.Font = new System.Drawing.Font("Lucida Bright", 8, System.Drawing.FontStyle.Bold);
-            }
+            } // end elif
             else if (resultLabel.Text.Length > 50)
             {
                 resultLabel.Font = new System.Drawing.Font("Lucida Bright", 10, System.Drawing.FontStyle.Bold);
-            }
+            } // end elif
             else if (resultLabel.Text.Length > 40)
             {
                 resultLabel.Font = new System.Drawing.Font("Lucida Bright", 12, System.Drawing.FontStyle.Bold);
-            }
+            } // end elif
             else if (resultLabel.Text.Length > 30)
             {
                 resultLabel.Font = new System.Drawing.Font("Lucida Bright", 14, System.Drawing.FontStyle.Bold);
-            }
+            } // end elif
             else if (resultLabel.Text.Length > 20)
             {
                 resultLabel.Font = new System.Drawing.Font("Lucida Bright", 16, System.Drawing.FontStyle.Bold);
-            }
+            } // end elif
             else
             {
                 resultLabel.Font = new System.Drawing.Font("Lucida Bright", 18, System.Drawing.FontStyle.Bold);
-            }
+            } // end else
         } // end method evaluateExpression
 
 
@@ -450,20 +449,20 @@ namespace Calculator_Rohde_Nick
             {
                 MessageBox.Show(s_errorMessage + " Please try again.", "Invalid expression!");
                 return;
-            }
+            } // end if
 
             if (sa_message.Length != 2)
             {
                 MessageBox.Show(s_errorMessage + " Please try again.", "Invalid Expression!");
                 return;
-            }
+            } // end if
 
             if (sa_message[1] == "-1")
             {
                 s_errorMessage += "\n\nNo expression was entered.";
                 MessageBox.Show(s_errorMessage, "Invalid Expression!");
                 return;
-            }
+            } // end if
 
             if (i_index > 0)
             {
@@ -487,10 +486,10 @@ namespace Calculator_Rohde_Nick
                     default:
                         s_errorMessage += "th";
                         break;
-                }
+                } // end switch
 
                 s_errorMessage += " postion in the expression.";
-            }
+            } // end if
 
             s_errorMessage += "\n\nThe expression was interpreted as: " + sa_message[1];
             s_errorMessage += "\n\nPlease check the expression, and try again.";
@@ -516,10 +515,10 @@ namespace Calculator_Rohde_Nick
             {
                 resultLabel.Text = display.Text + " = NaN";
                 resultLabel.Visible = true;
-            }
+            } // end if
 
             MessageBox.Show("The expression you entered contains an invalid operation, and cannot be evaluated. Please try again.", "Invalid Operation in Expression!");
-        }
+        } // end method handleArithmeticException
 
 
         // Unknown exception handler
@@ -529,7 +528,7 @@ namespace Calculator_Rohde_Nick
             message += e.Message;
             message += "\n\nPlease try again.";
             MessageBox.Show(message, "There was a problem with your expression.");
-        }
+        } // end method handleUnknownException
 
 
         // Button click event handlers:
@@ -537,97 +536,97 @@ namespace Calculator_Rohde_Nick
         {
             display.Text += "0";
             enter.Focus();
-        }
+        } // end method digit0Press
         private void digit1Press    (object sender, EventArgs e)
         {
             display.Text += "1";
             enter.Focus();
-        }
+        } // end method digit1Press
         private void digit2Press    (object sender, EventArgs e)
         {
             display.Text += "2";
             enter.Focus();
-        }
+        } // end method digit2Press
         private void digit3Press    (object sender, EventArgs e)
         {
             display.Text += "3";
             enter.Focus();
-        }
+        } // end method digit3Press
         private void digit4Press    (object sender, EventArgs e)
         {
             display.Text += "4";
             enter.Focus();
-        }
+        } // end method digit4Press
         private void digit5Press    (object sender, EventArgs e)
         {
             display.Text += "5";
             enter.Focus();
-        }
+        } // end method digit5Press
         private void digit6Press    (object sender, EventArgs e)
         {
             display.Text += "6";
             enter.Focus();
-        }
+        } // end method digit6Press
         private void digit7Press    (object sender, EventArgs e)
         {
             display.Text += "7";
             enter.Focus();
-        }
+        } // end method digit7Press
         private void digit8Press    (object sender, EventArgs e)
         {
             display.Text += "8";
             enter.Focus();
-        }
+        } // end method digit8Press
         private void digit9Press    (object sender, EventArgs e)
         {
             display.Text += "9";
             enter.Focus();
-        }
+        } // end method digit9Press
         private void opDivPress     (object sender, EventArgs e)
         {
             display.Text += "/";
             enter.Focus();
-        }
+        } // end method opDivPress
         private void opMulPress     (object sender, EventArgs e)
         {
             display.Text += "*";
             enter.Focus();
-        }
+        } // end method opMulPress
         private void opSubPress     (object sender, EventArgs e)
         {
             display.Text += "-";
             enter.Focus();
-        }
+        } // end method opSubPress
         private void opAddPress     (object sender, EventArgs e)
         {
             display.Text += "+";
             enter.Focus();
-        }
+        } // end method opAddPress
         private void opExpPress     (object sender, EventArgs e)
         {
             display.Text += "^";
             enter.Focus();
-        }
+        } // end method opExpPress
         private void openParenPress (object sender, EventArgs e)
         {
             display.Text += "(";
             enter.Focus();
-        }
+        } // end method openParenPress
         private void closeParenPress(object sender, EventArgs e)
         {
             display.Text += ")";
             enter.Focus();
-        }
+        } // end method closeParenPress
         private void clearPress     (object sender, EventArgs e)
         {
             display.Text = "";
             enter.Focus();
-        }
+        } // end method clearPress
         private void periodPress    (object sender, EventArgs e)
         {
             display.Text += ".";
             enter.Focus();
-        }
+        } // end method periodPress
 
 
         // Key press event handler
@@ -709,9 +708,11 @@ namespace Calculator_Rohde_Nick
             } // end switch
         } // end method keyboardPress 
 
-        private void focusEnterKey(object sender, EventArgs e)
+
+        // Returns focus to enter button after other buttons are clicked.
+        private void focusEnterKey  (object sender, EventArgs e)
         {
             enter.Focus();
-        }
+        } // end method focusEnterKey
     } // end class Calculator
 } // end namespace Calculator
