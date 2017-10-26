@@ -7,13 +7,10 @@ namespace Calculator_Rohde_Nick
 {
     public partial class Calculator : Form
     {
-        double previousAnswer;
-
 
         public Calculator()
         {
             InitializeComponent();
-            previousAnswer = 0;
             enter.Focus();
         } // end default constructor
 
@@ -27,7 +24,7 @@ namespace Calculator_Rohde_Nick
 
             if (display.Text.Length == 0)
             {
-                handleArgException(new ArgumentException("-1 -1"));
+                resultLabel.Text = "= 0";
                 return;
             }
 
