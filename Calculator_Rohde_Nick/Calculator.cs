@@ -14,6 +14,7 @@ namespace Calculator_Rohde_Nick
         {
             InitializeComponent();
             previousAnswer = 0;
+            enter.Focus();
         } // end default constructor
 
 
@@ -22,7 +23,7 @@ namespace Calculator_Rohde_Nick
         {
             // Variables
             Regex regex = new Regex("[0-9-+/*()^.]"); // used to initially verify input
-
+            
 
             if (display.Text.Length == 0)
             {
@@ -36,35 +37,26 @@ namespace Calculator_Rohde_Nick
                 try
                 {
                     parseInput(display.Text); // parse input
-                    error.Visible = false;
                 } // end try
                 // handle invalid expression errors
                 catch (ArgumentException exception) // invalid expression
                 {
                     handleArgException(exception);
-                    error.Text = "Invalid expression received, try again.";
-                    error.Visible = true;
                 } // end catch
                 // handle division by 0 errors
                 catch (DivideByZeroException)
                 {
                     handleDivByZeroException();
-                    error.Text = "Your expression contains a division by 0. This is not allowed.";
-                    error.Visible = true;
                 } // end catch
                 // handle invalid operation errors
-                catch (InvalidOperationException exception)
+                catch (ArithmeticException exception)
                 {
-                    handleInvalidOperationException(exception);
-                    error.Text = "Your expression contains an invalid operation, try again.";
-                    error.Visible = true;
+                    handleArithmeticException(exception);
                 } // end catch
                 // handle all other exception that might occur
                 catch (Exception exception)
                 {
                     handleUnknownException(exception);
-                    error.Text = "Your expression could not be evaluated, try again.";
-                    error.Visible = true;
                 } // end catch
             } // end if 
 
@@ -73,8 +65,6 @@ namespace Calculator_Rohde_Nick
                 MessageBox.Show("The expression you entered contains illegal characters." +
                                 "\n\nLegal characters:\n    Digits: 0-9\n    Operators: + - * / ^ " +
                                 "\n\nPlease try again.", "Illegal Characters in Expression!");
-                error.Text = "The expression you entered contains illegal characters, try again.";
-                error.Visible = true;
             } // end else
         } // end method verifyInput
 
@@ -140,18 +130,7 @@ namespace Calculator_Rohde_Nick
                 {
                     while(stack.Count > 0 && stack.Peek() != "(")
                     {
-                        string temp = "";
-                        if (numbers.IsMatch(stack.Peek()) || stack.Peek() == ".")
-                        {
-                            while (stack.Count > 0 && (numbers.IsMatch(stack.Peek()) || stack.Peek() == "."))
-                            {
-                                temp += stack.Pop();
-                            } // end while
-                        } // end if
-                        else
-                        {
-                            temp = stack.Pop();
-                        } // end else
+                        string temp = stack.Pop();
 
                         temp += " ";
                         expression += temp;
@@ -179,19 +158,7 @@ namespace Calculator_Rohde_Nick
                                 break;
                             } // end if
 
-                            string temp = "";
-
-                            if (numbers.IsMatch(stack.Peek()))
-                            {
-                                while (numbers.IsMatch(stack.Peek()))
-                                {
-                                    temp += stack.Pop();
-                                } // end while
-                            } // end if
-                            else
-                            {
-                                temp = stack.Pop();
-                            } // end else
+                            string temp = stack.Pop();
 
                             expression += temp;
                             expression += " ";
@@ -207,18 +174,8 @@ namespace Calculator_Rohde_Nick
             while(stack.Count > 0)
             {
                 string temp = "";
-
-                if (numbers.IsMatch(stack.Peek()))
-                {
-                    while (stack.Count > 0 && numbers.IsMatch(stack.Peek()))
-                    {
-                        temp += stack.Pop();
-                    } // end while
-                } // end if
-                else
-                {
-                    temp = stack.Pop();
-                } // end else
+                
+                temp = stack.Pop();
 
                 expression += temp;
                 if (stack.Count != 0)
@@ -243,7 +200,7 @@ namespace Calculator_Rohde_Nick
         {
             // Variables
             Regex operators = new Regex("[-+/*^]"), // regex to detect arithmetic operators
-                  numbers   = new Regex("[0-9]")  ; // regex to detect numbers
+                  numbers   = new Regex("[0-9.]") ; // regex to detect numbers
             
             bool noOperator           = true      , // keeps track of whether an operator is allowed
                  noPeriod             = false     , // keeps track of whether a period is allowed
@@ -285,7 +242,8 @@ namespace Calculator_Rohde_Nick
                 } // end elif
                 else if (operators.IsMatch(input[i].ToString()))
                 {
-                    if(noOperator && input[i] == '-')
+                    
+                    if (noOperator && input[i] == '-')
                     {
                         int k = i+1;
 
@@ -298,16 +256,18 @@ namespace Calculator_Rohde_Nick
 
                         input = input.Insert(k + 2, ")");
                         i = k+2;
+                        noOperator = false; // next character may be an operator
+                        continue;
                     }
                     else if (noOperator)
                     {
                         throw new ArgumentException(i.ToString() + " " + input);
                     } // end if
 
-                    omittedMultiplyEnd = false;
-                    omittedMultiplyStart = false;
                     noOperator = true; // next character can't be an operator
-                    noPeriod = false;
+                    omittedMultiplyEnd   = false;
+                    omittedMultiplyStart = false;
+                    noPeriod   = false;
                 } // end elif
                 else if (input[i] == '(')
                 {
@@ -316,12 +276,14 @@ namespace Calculator_Rohde_Nick
                         input = input.Insert(i, "*");
                         i++;
                         omittedMultiplyStart = false;
-                        omittedMultiplyEnd = false;
+                        omittedMultiplyEnd   = false;
                     }
 
                     open++;
                     noOperator = true; // open parenthesis can't be followed by operator
-                    noPeriod = false;
+                    
+                    
+                    noPeriod   = false;
                 } // end elif
                 else if (input[i] == ')')
                 {
@@ -336,7 +298,7 @@ namespace Calculator_Rohde_Nick
 
                     omittedMultiplyEnd = true;
                     noOperator = false; // next character can be an operator
-                    noPeriod = false;
+                    noPeriod   = false;
                 } // end elif
                 else if (numbers.IsMatch(input[i].ToString()))// parse number into string
                 {
@@ -345,7 +307,7 @@ namespace Calculator_Rohde_Nick
                         input = input.Insert(i, "*");
                         i++;
                         omittedMultiplyStart = false;
-                        omittedMultiplyEnd = false;
+                        omittedMultiplyEnd   = false;
                     }
                     omittedMultiplyStart = true;
                     noOperator = false; // next character can be an operator
@@ -441,20 +403,37 @@ namespace Calculator_Rohde_Nick
             } // end for
 
             result = stack.Pop();
-            previousAnswer = result;
 
-            if (display.Text.Length <= 25)
+            resultLabel.Text = "= ";
+            resultLabel.Text += result.ToString();
+            if(resultLabel.Text.Length > 70)
             {
-                resultLabel.Text = display.Text;
+                resultLabel.Font = new System.Drawing.Font("Lucida Bright", 7, System.Drawing.FontStyle.Bold);
+            }
+            else if(resultLabel.Text.Length > 60)
+            {
+                resultLabel.Font = new System.Drawing.Font("Lucida Bright", 8, System.Drawing.FontStyle.Bold);
+            }
+            else if (resultLabel.Text.Length > 50)
+            {
+                resultLabel.Font = new System.Drawing.Font("Lucida Bright", 10, System.Drawing.FontStyle.Bold);
+            }
+            else if (resultLabel.Text.Length > 40)
+            {
+                resultLabel.Font = new System.Drawing.Font("Lucida Bright", 12, System.Drawing.FontStyle.Bold);
+            }
+            else if (resultLabel.Text.Length > 30)
+            {
+                resultLabel.Font = new System.Drawing.Font("Lucida Bright", 14, System.Drawing.FontStyle.Bold);
+            }
+            else if (resultLabel.Text.Length > 20)
+            {
+                resultLabel.Font = new System.Drawing.Font("Lucida Bright", 16, System.Drawing.FontStyle.Bold);
             }
             else
             {
-                resultLabel.Text = "result";
+                resultLabel.Font = new System.Drawing.Font("Lucida Bright", 18, System.Drawing.FontStyle.Bold);
             }
-      
-            resultLabel.Text += " = ";
-            resultLabel.Text += result.ToString();
-            resultLabel.Visible = true;
         } // end method evaluateExpression
 
 
@@ -528,11 +507,13 @@ namespace Calculator_Rohde_Nick
         private void handleDivByZeroException()
         {
             MessageBox.Show("The expression you entered contains a division by 0. This is not a legal operation. Please try again.", "Divison by 0 in Expression!");
+            resultLabel.Text = display.Text + " = NaN";
+            resultLabel.Visible = true;
         } // end method handleDivByZeroException
 
 
         // Invalid Operation Handler
-        private void handleInvalidOperationException(InvalidOperationException e)
+        private void handleArithmeticException(ArithmeticException e)
         {
             if (e.Message == "0^0")
             {
@@ -650,21 +631,6 @@ namespace Calculator_Rohde_Nick
             display.Text += ".";
             enter.Focus();
         }
-        private void insertAnswer   (object sender, EventArgs e)
-        {
-            display.Text += previousAnswer.ToString();
-            enter.Focus();
-        }
-        private void insertPi       (object sender, EventArgs e)
-        {
-            display.Text += Math.PI.ToString().Remove(8);
-            enter.Focus();
-        }
-        private void insertE        (object sender, EventArgs e)
-        {
-            display.Text += Math.E.ToString().Remove(8);
-            enter.Focus();
-        }
 
 
         // Key press event handler
@@ -728,12 +694,27 @@ namespace Calculator_Rohde_Nick
                 case ('+'):
                     display.Text += "+";
                     break;
+                case ('('):
+                    display.Text += "(";
+                    break;
+                case (')'):
+                    display.Text += ")";
+                    break;
                 case ('\u001b'):
                     display.Text = "";
+                    break;
+                case ('\b'):
+                    if(display.Text.Length > 0)
+                        display.Text = display.Text.Remove(display.Text.Length - 1);
                     break;
                 default:
                     break;
             } // end switch
         } // end method keyboardPress 
+
+        private void focusEnterKey(object sender, EventArgs e)
+        {
+            enter.Focus();
+        }
     } // end class Calculator
 } // end namespace Calculator
