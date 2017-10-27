@@ -216,9 +216,16 @@ namespace Calculator_Rohde_Nick
                     i++;
                 }
 
-                input = input.Insert(0, "(0");
-
-                input = input.Insert(i+2, ")");
+                if ((i + 3 < input.Length) && numbers.IsMatch(input[i + 3].ToString()))
+                {
+                    input = input.Insert(0, "(0");
+                    input = input.Insert(i + 2, ")");
+                }
+                else
+                {
+                    input = input.Insert(0, "0");
+                }
+                
             } // end if
 
             // verify this is a valid expression
@@ -525,7 +532,15 @@ namespace Calculator_Rohde_Nick
         private void handleUnknownException(Exception e)
         {
             string message = "The expression you entered could not be evaluated.\n\nReason:\n";
-            message += e.Message;
+            if (e.Message != "Stack empty.")
+            {
+                message += e.Message;
+            }
+            else
+            {
+                message += "Your expression contains an illegal operation.";
+            }
+
             message += "\n\nPlease try again.";
             MessageBox.Show(message, "There was a problem with your expression.");
         } // end method handleUnknownException
