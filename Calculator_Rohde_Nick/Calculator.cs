@@ -3,10 +3,20 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
+/* * * * * * * * * * * * * * * * * *
+ * Programmer: Nick Rohde          *
+ * Project   : Lab 3 - Calculator  *
+ * Class     : CS 480_003          *
+ * Instructor: Szilard Vajda       *
+ * Date      : 2nd November 2017   *
+ * * * * * * * * * * * * * * * * * */
+
+
 namespace Calculator_Rohde_Nick
 {
     public partial class Calculator : Form
     {
+        // Default constructor for Calculator
         public Calculator()
         {
             InitializeComponent();
@@ -14,7 +24,12 @@ namespace Calculator_Rohde_Nick
         } // end default constructor
 
 
-        // Verifies the user input, and then sends it off to be parsed, and evaluated
+        /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+         * verifyInput is called when the user presses the enter key, or clicks the enter button. It first       *
+         * checks whether the function contains illegal characters using regex, and throws an exception if the   *
+         * input contains illegal characters. Otherwise it sends the input to parseInput for syntax verification *
+         * and evaluation. This method also handles all exceptions that may occur during program execution.      *
+         * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
         private void verifyInput(object sender, EventArgs e)
         {
             // Variables
@@ -65,7 +80,13 @@ namespace Calculator_Rohde_Nick
         } // end method verifyInput
 
 
-        // Parses input turning the infix into postfix, then sends the postfix to evaluateInput
+        /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+         * parseInput takes the input string received from verify input, and sends it to isValidExpression.      *
+         * Once the expression has been verified to be of proper syntax, this function will create a new string  *
+         * with the expression in it. This new string has a special format that can be interpreted by the        *
+         * evaluateExpression function. Once the expression has been created, it calls evaluateExpression        *
+         * and passes this expression to it.                                                                     *
+         * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
         private void parseInput(string input)
         {
             // Variables
@@ -189,7 +210,15 @@ namespace Calculator_Rohde_Nick
         } // end method parseInput
 
 
-        // Verifies the expression entered is syntactically valid
+        /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+         * isValidExpression verifies that the input is syntactically correct. It also handles two special cases *
+         * namely, ommitted multiplication symbols and negation (unary negative operator). When a parenthesis is *
+         * followed or preceeded by a number (without an operator in between), it inserts a multiplication       *
+         * operator into the expression. When a negative symbol is not preceeded by a number, a multiplication   *
+         * by -1 is inserted into the expression to handle unary negative operations. If a syntax issues is      *
+         * detected, this method will throw an ArgumentException with the index (or -1) and the modified input   *
+         * string. If no issues are detected, it returns the modified string to parseInput.                      *
+         * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
         private string isValidExpression(string input)
         {
             // Variables
@@ -309,26 +338,28 @@ namespace Calculator_Rohde_Nick
         } // end method isValidExpression
 
 
-        // Evaluated the postfix expression from parseInput
+        // Evaluates the postfix expression from parseInput
         private void evaluateExpression(string input)
         {
             // Variables
-            Stack<double> stack = new Stack<double>();
+            Stack<double> stack = new Stack<double>(); // stores operands
 
-            double result = 0;
+            double result       = 0                  ; // stores result
 
-            string[] expression = input.Split();
+            string[] expression = input.Split()      ; // turn expression into array for easier iteration
 
 
+            // Evaluate the expression left to right
             for(int i = 0; i < expression.Length; i++)
             {
-                if(expression[i] == " " || expression[i] == "")
+                if(expression[i] == " " || expression[i] == "") // spaces/empty slots are ignored
                 {
                     continue;
                 } // end if
 
-                double temp = 0;
+                double temp = 0; // temp storage for numbers
 
+                // check if next is an operand or operator
                 if (double.TryParse(expression[i], out temp))
                 {
                     stack.Push(temp);
@@ -336,9 +367,19 @@ namespace Calculator_Rohde_Nick
 
                 else
                 {
-                    double a = stack.Pop(),
-                           b = stack.Pop();
+                    double a, b; // temp storage for operands
 
+                    if (stack.Count > 1) // take top two operands
+                    {
+                        a = stack.Pop();
+                        b = stack.Pop();
+                    }
+                    else // expression is invalid
+                    {
+                        throw new ArgumentException("-1");
+                    }
+
+                    // evaluate
                     switch(expression[i])
                     {
                         case ("+"):
@@ -351,7 +392,7 @@ namespace Calculator_Rohde_Nick
                             stack.Push(b * a);
                             break;
                         case ("/"):
-                            if (a == 0)
+                            if (a == 0) // division by 0
                             {
                                 throw new DivideByZeroException();
                             } // end if
@@ -361,22 +402,31 @@ namespace Calculator_Rohde_Nick
                             } // end else
                             break;
                         case ("^"):
-                            if (a == 0 && b == 0)
+                            if (a == 0 && b == 0) // 0^0 is indeterminate
                             {
                                 throw new ArithmeticException("0^0");
                             } // end if
                             stack.Push(Math.Pow(b,a));
                             break;
-                        default:
+                        default: // invalid operation
                             throw new ArgumentException("-1");
                     } // end switch
                 } // end if
             } // end for
 
-            result = stack.Pop();
+            result = stack.Pop(); // result will be last item on the stack
 
+            // stack should now be empty, otherwise the expression was invalid
+            if (stack.Count > 0)
+            {
+                throw new ArgumentException("-1");
+            }            
+
+            // output result to user
             resultLabel.Text = "= ";
             resultLabel.Text += result.ToString();
+
+            // If the result string is very long, adjust font size
             if(resultLabel.Text.Length > 70)
             {
                 resultLabel.Font = new System.Drawing.Font("Lucida Bright", 7, System.Drawing.FontStyle.Bold);
@@ -413,11 +463,11 @@ namespace Calculator_Rohde_Nick
         private void handleArgException(ArgumentException exception)
         {
             // Variables
-            int    i_index        = 0                                                    ;
+            int      i_index        = 0                                                    ;
 
-            string s_errorMessage = "There was an issue with the expression you entered.";
+            string   s_errorMessage = "There was an issue with the expression you entered.";
 
-            string[] sa_message   = exception.Message.Split()                            ;
+            string[] sa_message     = exception.Message.Split()                            ;
 
 
             if ((sa_message.Length > 0) && !(int.TryParse(sa_message[0], out i_index)))
@@ -470,15 +520,15 @@ namespace Calculator_Rohde_Nick
             s_errorMessage += "\n\nPlease check the expression, and try again.";
 
             MessageBox.Show(s_errorMessage, "Invalid Expression!");
-
         } // end method handleArgException
 
 
         // Division by zero handler
         private void handleDivByZeroException()
         {
-            MessageBox.Show("The expression you entered contains a division by 0. This is not a legal operation. Please try again.", "Divison by 0 in Expression!");
-            resultLabel.Text = display.Text + " = NaN";
+            MessageBox.Show("The expression you entered contains a division by 0. This is not a legal operation. Please try again.",
+                            "Divison by 0 in Expression!");
+            resultLabel.Text = display.Text + "= NaN";
             resultLabel.Visible = true;
         } // end method handleDivByZeroException
 
@@ -488,11 +538,11 @@ namespace Calculator_Rohde_Nick
         {
             if (e.Message == "0^0")
             {
-                resultLabel.Text = display.Text + " = NaN";
-                resultLabel.Visible = true;
+                resultLabel.Text = display.Text + "= NaN";
             } // end if
 
-            MessageBox.Show("The expression you entered contains an invalid operation, and cannot be evaluated. Please try again.", "Invalid Operation in Expression!");
+            MessageBox.Show("The expression you entered contains an invalid operation, and cannot be evaluated. Please try again.",
+                            "Invalid Operation in Expression!");
         } // end method handleArithmeticException
 
 
@@ -500,11 +550,12 @@ namespace Calculator_Rohde_Nick
         private void handleUnknownException(Exception e)
         {
             string message = "The expression you entered could not be evaluated.\n\nReason:\n";
-            if (e.Message != "Stack empty.")
+
+            if (e.Message != "Stack empty.") // if the stack wasn't empty, an unknown issue occurred
             {
                 message += e.Message;
             }
-            else
+            else // if the stack is empty, too many operands were supplied
             {
                 message += "Your expression contains an illegal operation.";
             }
@@ -620,22 +671,24 @@ namespace Calculator_Rohde_Nick
         } // end method periodPress
 
 
-        // Key press event handler
+        // Event handler for keyboard presses
         private void keyboardPress  (object sender, KeyPressEventArgs e)
         {
-            char c_temp = e.KeyChar;
+            char c_temp = e.KeyChar; // extract key from event
 
-            if(sender.Equals(display))
-            {
+            if(sender.Equals(display)) // display handles its own events
+            {                          // this function only handles esc button
                 if(c_temp == '\u001b')
                 {
-                    display.Text = "";
+                    display.Text = ""; // esc clears the input field
                 } // end if
                 return;
             } // end if
             
+            // all non-display events are handled here
             switch(c_temp)
             {
+                // for digits and operators, the appropriate symbol is inserted into input
                 case ('0'):
                     display.Text += "0";
                     break;
@@ -687,20 +740,22 @@ namespace Calculator_Rohde_Nick
                 case (')'):
                     display.Text += ")";
                     break;
-                case ('\u001b'):
+                case ('\u001b'): // escape button
                     display.Text = "";
                     break;
-                case ('\b'):
-                    if(display.Text.Length > 0)
+                case ('\b'):     // backspace button
+                    if (display.Text.Length > 0) // if there is input, delete the right most character in input
+                    {
                         display.Text = display.Text.Remove(display.Text.Length - 1);
+                    }
                     break;
-                default:
-                    break;
+                default:   // all other keys are illegal in expressions
+                    break; // pushing them will be ignored
             } // end switch
         } // end method keyboardPress 
 
 
-        // Returns focus to enter button after other buttons are clicked
+        // Returns focus to enter button after other buttons are clicked in UI
         private void focusEnterKey  (object sender, EventArgs e)
         {
             enter.Focus();
