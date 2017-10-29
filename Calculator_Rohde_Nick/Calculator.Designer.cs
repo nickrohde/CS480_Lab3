@@ -49,6 +49,7 @@
             this.clear = new System.Windows.Forms.Button();
             this.period = new System.Windows.Forms.Button();
             this.resultLabel = new System.Windows.Forms.TextBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // display
@@ -60,6 +61,7 @@
             this.display.ReadOnly = true;
             this.display.Size = new System.Drawing.Size(392, 36);
             this.display.TabIndex = 0;
+            this.display.Enter += new System.EventHandler(this.focusEnterKey);
             this.display.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.keyboardPress);
             // 
             // seven
@@ -282,12 +284,12 @@
             // 
             // clear
             // 
-            this.clear.Font = new System.Drawing.Font("Lucida Bright", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.clear.Location = new System.Drawing.Point(410, 11);
+            this.clear.Font = new System.Drawing.Font("Lucida Bright", 12F, System.Drawing.FontStyle.Bold);
+            this.clear.Location = new System.Drawing.Point(410, 10);
             this.clear.Name = "clear";
-            this.clear.Size = new System.Drawing.Size(80, 38);
-            this.clear.TabIndex = 21;
-            this.clear.Text = "Clear";
+            this.clear.Size = new System.Drawing.Size(40, 38);
+            this.clear.TabIndex = 30;
+            this.clear.Text = "C";
             this.clear.UseVisualStyleBackColor = true;
             this.clear.Click += new System.EventHandler(this.clearPress);
             this.clear.Enter += new System.EventHandler(this.focusEnterKey);
@@ -313,6 +315,19 @@
             this.resultLabel.ReadOnly = true;
             this.resultLabel.Size = new System.Drawing.Size(392, 36);
             this.resultLabel.TabIndex = 29;
+            this.resultLabel.Enter += new System.EventHandler(this.focusEnterKey);
+            // 
+            // button1
+            // 
+            this.button1.Font = new System.Drawing.Font("Lucida Bright", 12F, System.Drawing.FontStyle.Bold);
+            this.button1.Location = new System.Drawing.Point(450, 10);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(40, 38);
+            this.button1.TabIndex = 30;
+            this.button1.Text = "CE";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.backspacePress);
+            this.button1.Enter += new System.EventHandler(this.focusEnterKey);
             // 
             // Calculator
             // 
@@ -320,6 +335,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(502, 377);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.resultLabel);
             this.Controls.Add(this.period);
             this.Controls.Add(this.clear);
@@ -346,6 +362,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Calculator";
             this.Text = "Calculator";
+            this.Enter += new System.EventHandler(this.focusEnterKey);
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.keyboardPress);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -374,6 +391,7 @@
         private System.Windows.Forms.Button clear;
         private System.Windows.Forms.Button period;
         private System.Windows.Forms.TextBox resultLabel;
+        private System.Windows.Forms.Button button1;
     }
 }
 
