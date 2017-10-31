@@ -1,7 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿/* * * * * * * * * * * * * * * * * *
+ * Programmer: Nick Rohde          *
+ * Project   : Lab 3 - Calculator  *
+ * Class     : CS 480_003          *
+ * Instructor: Szilard Vajda       *
+ * Date      : 2nd November 2017   *
+ * * * * * * * * * * * * * * * * * */
+
+
+// Includes:
+using System;
 using System.Windows.Forms;
-using System.Text.RegularExpressions;
 
 namespace Calculator_Rohde_Nick
 {

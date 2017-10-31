@@ -1,4 +1,13 @@
-﻿namespace Calculator_Rohde_Nick
+﻿/* * * * * * * * * * * * * * * * * *
+ * Programmer: Nick Rohde          *
+ * Project   : Lab 3 - Calculator  *
+ * Class     : CS 480_003          *
+ * Instructor: Szilard Vajda       *
+ * Date      : 2nd November 2017   *
+ * * * * * * * * * * * * * * * * * */
+
+
+namespace Calculator_Rohde_Nick
 {
     partial class Calculator
     {

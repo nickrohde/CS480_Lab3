@@ -1,15 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using System.Windows.Forms;
-
-/* * * * * * * * * * * * * * * * * *
+﻿/* * * * * * * * * * * * * * * * * *
  * Programmer: Nick Rohde          *
  * Project   : Lab 3 - Calculator  *
  * Class     : CS 480_003          *
  * Instructor: Szilard Vajda       *
  * Date      : 2nd November 2017   *
+ *                                 *
+ * Variable prefixes used:         *
+ * rx_ : Regex object              *
+ * d_  : double                    *
+ * i_  : integer                   *
+ * s_  : string                    *
+ * sa_ : string array              *
  * * * * * * * * * * * * * * * * * */
+
+
+// Includes:
+using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using System.Windows.Forms;
 
 
 namespace Calculator_Rohde_Nick
@@ -33,7 +42,7 @@ namespace Calculator_Rohde_Nick
         private void verifyInput(object sender, EventArgs e)
         {
             // Variables
-            Regex regex = new Regex("[0-9-+/*()^.]"); // used to initially verify input
+            Regex rx_regex = new Regex("[0-9-+/*()^.]"); // used to initially verify input
             
 
             if (display.Text.Length == 0)
@@ -43,7 +52,7 @@ namespace Calculator_Rohde_Nick
             } // end if
 
             // filter out illegal characters with regex
-            if (regex.IsMatch(display.Text))
+            if (rx_regex.IsMatch(display.Text))
             {
                 try
                 {
@@ -71,7 +80,7 @@ namespace Calculator_Rohde_Nick
                 } // end catch
             } // end if 
 
-            else // illegal characters detected by regex
+            else // illegal characters detected by regex (this shouldn't happen, but just in case)
             {
                 MessageBox.Show("The expression you entered contains illegal characters." +
                                 "\n\nLegal characters:\n    Digits: 0-9\n    Operators: + - * / ^ " +
@@ -87,23 +96,23 @@ namespace Calculator_Rohde_Nick
          * evaluateExpression function. Once the expression has been created, it calls evaluateExpression        *
          * and passes this expression to it.                                                                     *
          * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-        private void parseInput(string input)
+        private void parseInput(string s_input)
         {
             // Variables
-            Stack<string> stack = new Stack<string>();
+            Stack<string> stack = new Stack<string>() ;
 
-            Regex operators   = new Regex("[-+/*^]"), // regex to detect arithmetic operators
-                  numbers     = new Regex("[0-9.]") ; // regex to detect numbers
+            Regex rx_operators  = new Regex("[-+/*^]"), // regex to detect arithmetic operators
+                  rx_numbers    = new Regex("[0-9.]") ; // regex to detect numbers
 
-            string expression = ""                  ; // expression to be evaluated
+            string s_expression = ""                  ; // expression to be evaluated
 
-            int    i          = 0                   ; // index for parsing the string
+            int    i            = 0                   ; // index for parsing the string
                 
 
             // check if expression is valid
             try
             {
-                input = isValidExpression(input); // the returned string will have special format for certain operations
+                s_input = isValidExpression(s_input); // the returned string will have special format for certain operations
             } // end try
             catch (Exception e)
             {
@@ -111,7 +120,7 @@ namespace Calculator_Rohde_Nick
             } // end catch
             
             // turn infix expression into postfix expression
-            while(i < input.Length)
+            while(i < s_input.Length)
             {
 
                 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -119,13 +128,13 @@ namespace Calculator_Rohde_Nick
                  * the loop will put all numbers into a string, and then add them to   *
                  * the expression altogether.                                          *
                  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-                if (numbers.IsMatch(input[i].ToString()) || input[i] == '.')
+                if (rx_numbers.IsMatch(s_input[i].ToString()) || s_input[i] == '.')
                 {
-                    string temp = ""; // temp storage for number
-                    while (numbers.IsMatch(input[i].ToString()) || input[i] == '.')
+                    string s_temp = ""; // temp storage for number
+                    while (rx_numbers.IsMatch(s_input[i].ToString()) || s_input[i] == '.')
                     {
-                        temp += input[i].ToString();
-                        if (i < input.Length-1)      // to avoid ArrayIndexExceptions
+                        s_temp += s_input[i].ToString();
+                        if (i < s_input.Length-1)      // to avoid ArrayIndexExceptions
                         {
                             i++;
                         } // end if
@@ -135,27 +144,27 @@ namespace Calculator_Rohde_Nick
                             break; // this prevents an ArrayIndexException from being thrown in the loop
                         } // end else
                     } // end while
-                    expression += temp; // add number to expression
-                    expression += " " ; // separator for evaluation purposes
-                    continue;           // to prevent i from being incremented twice in a row
+                    s_expression += s_temp; // add number to expression
+                    s_expression += " " ;   // separator for evaluation purposes
+                    continue;               // to prevent i from being incremented twice in a row
                 } // end else
 
                 // Push open parentheses on the stack to serve as sentinel when popping stack
-                else if (input[i] == '(')
+                else if (s_input[i] == '(')
                 {
-                    stack.Push(input[i].ToString());            
+                    stack.Push(s_input[i].ToString());            
                 } // end elif
 
                 // Closing parentheses require the stack to be popped until the open parenthesis is found
-                else if (input[i] == ')')
+                else if (s_input[i] == ')')
                 {
                     // pop the stack until the open parenthesis is found
                     while (stack.Count > 0 && stack.Peek() != "(")
                     {
-                        string temp = stack.Pop();
+                        string s_temp = stack.Pop();
 
-                        temp += " ";        // separator for evaluation purposes
-                        expression += temp; // add each operator to expression
+                        s_temp += " ";          // separator for evaluation purposes
+                        s_expression += s_temp; // add each operator to expression
                     } // end while
 
                     stack.Pop(); // pop left parenthesis off the stack
@@ -166,11 +175,11 @@ namespace Calculator_Rohde_Nick
                  * empty, otherwise, precedence must be considered before adding it to *
                  * the stack.                                                          *
                  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-                else if (operators.IsMatch(input[i].ToString()))
+                else if (rx_operators.IsMatch(s_input[i].ToString()))
                 {
                     if(stack.Count == 0 || stack.Peek() == "(") // precendence does not matter if stack is empty
                     {                                           // or this operator is in parentheses
-                        stack.Push(input[i].ToString());
+                        stack.Push(s_input[i].ToString());
                     } // end if
 
                     // Stack is not empty and operator is not enclosed in parentheses
@@ -180,24 +189,22 @@ namespace Calculator_Rohde_Nick
                         while(stack.Count != 0 && stack.Peek() != "(")
                         {
                             // if this operator is higher precendence than top of stack, we can stop
-                            if (((input[i] == '*' || input[i] == '/') && (stack.Peek() == "+" || stack.Peek() == "-")))
+                            if (((s_input[i] == '*' || s_input[i] == '/') && (stack.Peek() == "+" || stack.Peek() == "-")))
                             {
                                 break;
                             } // end if
 
                             // if this operator is higher precendence than top of stack, we can stop
-                            if ((input[i] == '^' && (stack.Peek() == "+" || stack.Peek() == "-" || stack.Peek() == "*" || stack.Peek() == "/")))
+                            if ((s_input[i] == '^' && (stack.Peek() == "+" || stack.Peek() == "-" || stack.Peek() == "*" || stack.Peek() == "/")))
                             {
                                 break;
                             } // end if
-
-                            string temp = stack.Pop();
-
-                            expression += temp; // add operator to expression
-                            expression += " ";  // separator for evaluation purposes
+                            
+                            s_expression += stack.Pop();   // add operator to expression
+                            s_expression += " ";           // separator for evaluation purposes
                         } // end while
 
-                        stack.Push(input[i].ToString()); // push this operator onto the stack once the higher precedence operators are off
+                        stack.Push(s_input[i].ToString()); // push this operator onto the stack once the higher precedence operators are off
 
                     } // end else
                 } // end elif
@@ -207,21 +214,18 @@ namespace Calculator_Rohde_Nick
             // If the stack has more operators, add them to end of expression
             while(stack.Count > 0)
             {
-                string temp = "";
-                
-                temp = stack.Pop();
-                expression += temp;
+                s_expression += stack.Pop();
 
                 if (stack.Count != 0) // to avoid a space at the end of the expression
                 {
-                    expression += " ";
+                    s_expression += " ";
                 } // end if
             } // end while
 
             // Attempt to evaluate the parsed expression
             try
             {
-                evaluateExpression(expression);
+                evaluateExpression(s_expression);
             } // end try
 
             // All exceptions are handled by verifyInput
@@ -241,69 +245,68 @@ namespace Calculator_Rohde_Nick
          * detected, this method will throw an ArgumentException with the index (or -1) and the modified input   *
          * string. If no issues are detected, it returns the modified string to parseInput.                      *
          * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-        private string isValidExpression(string input)
+        private string isValidExpression(string s_input)
         {
             // Variables
-            Regex operators = new Regex("[-+/*^]"), // regex to detect arithmetic operators
-                  numbers   = new Regex("[0-9.]") ; // regex to detect numbers
+            Regex rx_operators = new Regex("[-+/*^]"), // regex to detect arithmetic operators
+                  rx_numbers   = new Regex("[0-9.]") ; // regex to detect numbers
             
-            bool  noOperator           = true     , // keeps track of whether an operator is allowed
-                  noPeriod             = false    , // keeps track of whether a period is allowed
-                  omittedMultiplyStart = false    , // used to do the conversion from a(b) to a*(b)
-                  omittedMultiplyEnd   = false    ; // used to do the conversion from (a)b to (a)*b
+            bool  b_noOperator           = true      , // keeps track of whether an operator is allowed
+                  b_noPeriod             = false     , // keeps track of whether a period is allowed
+                  b_omittedMultiplyStart = false     , // used to do the conversion from a(b) to a*(b)
+                  b_omittedMultiplyEnd   = false     ; // used to do the conversion from (a)b to (a)*b
 
-            int  open                  = 0        , // keeps track of open parentheses
-                 i                     = 0        ; // index for parsing input
+            int  i_open                  = 0         , // keeps track of open parentheses
+                 i                       = 0         ; // index for parsing input
 
 
             // leading negative is allowed
-            if (input[0] == '-')
+            if (s_input[0] == '-')
             {
                 i = 6;
-                input = input.Remove(0, 1);
-                input = input.Insert(0, "(0-1)*");
+                s_input = s_input.Remove(0, 1);
+                s_input = s_input.Insert(0, "(0-1)*");
             } // end if
 
             // verify this is a valid expression
-            while (i < input.Length)
+            while (i < s_input.Length)
             {
                 // period encountered
-                if (input[i] == '.') 
+                if (s_input[i] == '.') 
                 {
-                    if (noPeriod) // double period not allowed i.e. "123..1"
+                    if (b_noPeriod) // double period not allowed i.e. "123..1"
                     {
-                        throw new ArgumentException(i.ToString() + " " + input);
+                        throw new ArgumentException(i.ToString() + " " + s_input);
                     } // end if
-                    noPeriod = true; // period has been encountered, now a number 
-                                     // or operator must be encountered next to be valid
+                    b_noPeriod = true; // period has been encountered, now a number 
+                                       // must be encountered next to be valid
                 } // end elif
-
 
                 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
                  * Operator encountered: First check if it's a unary negative, if so   *
                  * insert a multiplication by -1. Otherwise, check if an operator has  *
                  * already been encountered. If so, it's an invalid expression.        *
                  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-                else if (operators.IsMatch(input[i].ToString()))
+                else if (rx_operators.IsMatch(s_input[i].ToString()))
                 {
-                    if (noOperator && input[i] == '-')     // unary negative case
+                    if (b_noOperator && s_input[i] == '-')     // unary negative case
                     {
-                        input = input.Remove(i, 1);        // remove the unary negative
-                        input = input.Insert(i, "(0-1)*"); // replace with multiplication by -1
-                        i += 6;                            // set i to be behind the inserted piece
-                        noOperator = false;                // next character may be an operator
-                        noPeriod   = false;                // periods are allowed to follow an operator
-                        continue;                          // to avoid the other variable setting to happen
+                        s_input = s_input.Remove(i, 1);        // remove the unary negative
+                        s_input = s_input.Insert(i, "(0-1)*"); // replace with multiplication by -1
+                        i += 6;                                // set i to be behind the inserted piece
+                        b_noOperator = false;                  // next character may be an operator
+                        b_noPeriod   = false;                  // periods are allowed to follow an operator
+                        continue;                              // to avoid the other variable setting to happen
                     } // end if
-                    else if (noOperator)                   // two operators cannot follow eachother directly
+                    else if (b_noOperator)                     // two operators cannot follow eachother directly
                     {
-                        throw new ArgumentException(i.ToString() + " " + input);
+                        throw new ArgumentException(i.ToString() + " " + s_input);
                     } // end elif
 
-                    noOperator = true;            // next character can't be an operator
-                    omittedMultiplyEnd   = false; // in case the last thing encountered was a parenthesis
-                    omittedMultiplyStart = false; // in case the last thing encountered was a parenthesis
-                    noPeriod  = false;            // periods are allowed to follow an operator
+                    b_noOperator = true;            // next character can't be an operator
+                    b_omittedMultiplyEnd   = false; // in case the last thing encountered was a parenthesis
+                    b_omittedMultiplyStart = false; // in case the last thing encountered was a parenthesis
+                    b_noPeriod  = false;            // periods are allowed to follow an operator
                 } // end elif
 
                 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -311,19 +314,19 @@ namespace Calculator_Rohde_Nick
                  * multiplication, and insert an operator if so. Otherwise, ignore it  *
                  * and increment the count of open parentheses encountered.            *
                  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-                else if (input[i] == '(')
+                else if (s_input[i] == '(')
                 {
-                    if (omittedMultiplyStart)
+                    if (b_omittedMultiplyStart)
                     {
-                        input = input.Insert(i, "*"); // insert a multiplication operator
-                        i++;                          // skip over the operator, no need check it
-                        omittedMultiplyStart = false; // in case the last thing encountered was a parenthesis 
-                        omittedMultiplyEnd   = false; // in case the last thing encountered was a parenthesis
+                        s_input = s_input.Insert(i, "*"); // insert a multiplication operator
+                        i++;                              // skip over the operator, no need check it
+                        b_omittedMultiplyStart = false;   // in case the last thing encountered was a parenthesis 
+                        b_omittedMultiplyEnd   = false;   // in case the last thing encountered was a parenthesis
                     } // end if
 
-                    open++;             // keep track of open pairs of parentheses
-                    noOperator = true ; // open parenthesis can't be followed by operator
-                    noPeriod   = false; // periods are allowed to follow a parenthesis
+                    i_open++;             // keep track of open pairs of parentheses
+                    b_noOperator = true ; // open parenthesis can't be followed by operator
+                    b_noPeriod   = false; // periods are allowed to follow a parenthesis
                 } // end elif
 
                 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -331,20 +334,20 @@ namespace Calculator_Rohde_Nick
                  * multiplication, and insert an operator if so. Otherwise, ignore it  *
                  * and decrement the count of open parentheses encountered.            *
                  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-                else if (input[i] == ')')
+                else if (s_input[i] == ')')
                 {
-                    if (open > 0) // check if there were any open parentheses so far
+                    if (i_open > 0) // check if there were any open parentheses so far
                     {
-                        open--;   // close 1 pair 
+                        i_open--;   // close 1 pair 
                     } // end if
-                    else          // no open parenthesis preceeded this one, invalid expression
+                    else            // no open parenthesis preceeded this one, invalid expression
                     {
-                        throw new ArgumentException(i.ToString() + " " + input);
+                        throw new ArgumentException(i.ToString() + " " + s_input);
                     } // end else
 
-                    omittedMultiplyEnd = true; // in case next is a number with no operator in between
-                    noOperator = false;        // next character can be an operator
-                    noPeriod   = false;        // periods are allowed to follow a parenthesis
+                    b_omittedMultiplyEnd = true; // in case next is a number with no operator in between
+                    b_noOperator = false;        // next character can be an operator
+                    b_noPeriod   = false;        // periods are allowed to follow a parenthesis
                 } // end elif
 
                 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -352,96 +355,97 @@ namespace Calculator_Rohde_Nick
                  * if so, insert an operator. Otherwise, allow period/operator for     *
                  * next character.                                                     *
                  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-                else if (numbers.IsMatch(input[i].ToString())) 
+                else if (rx_numbers.IsMatch(s_input[i].ToString())) 
                 {
-                    if (omittedMultiplyEnd) // check if a multiplication was ommitted
+                    if (b_omittedMultiplyEnd) // check if a multiplication was ommitted
                     {
-                        input = input.Insert(i, "*"); // insert operator
-                        i++;                          // skip this operator
-                        omittedMultiplyEnd   = false; // in case the last thing encountered was a parenthesis
+                        s_input = s_input.Insert(i, "*"); // insert operator
+                        i++;                              // skip this operator
+                        b_omittedMultiplyEnd   = false;   // in case the last thing encountered was a parenthesis
                     } // end if
-                    omittedMultiplyStart = true; // next character may be an open parenthesis with operator ommitted
-                    noPeriod   = false;          // next character may be a period
-                    noOperator = false;          // next character can be an operator
+
+                    b_omittedMultiplyStart = true; // next character may be an open parenthesis with operator ommitted
+                    b_noPeriod   = false;          // next character may be a period
+                    b_noOperator = false;          // next character can be an operator
                 } // end else
 
                 // Illegal character in the string, invalid expression
                 else
                 {
-                    throw new ArgumentException(i.ToString() + " " + input);
+                    throw new ArgumentException(i.ToString() + " " + s_input);
                 } // end else
 
                 i++;
             }// end for
 
             // Check if all parentheses were closed, if not, invalid expression
-            if (open > 0)
+            if (i_open > 0)
             {
-                throw new ArgumentException("-1 " + input);
+                throw new ArgumentException("-1 " + s_input);
             } // end if
 
             // Check if all operators have 2 operands, if not, invalid expression
-            if (noOperator)
+            if (b_noOperator)
             {
-                throw new ArgumentException("-1 " + input);
+                throw new ArgumentException("-1 " + s_input);
             } // end if
 
-            return input; // return augmented expression to parseInput for processing
+            return s_input; // return augmented expression to parseInput for processing
         } // end method isValidExpression
 
 
         // Evaluates the postfix expression from parseInput
-        private void evaluateExpression(string input)
+        private void evaluateExpression(string s_input)
         {
             // Variables
-            Stack<double> stack = new Stack<double>(); // stores operands
+            Stack<double> d_stack  = new Stack<double>(); // stores operands
 
-            double result       = 0                  ; // stores result
+            double   d_result      = 0                  ; // stores result
 
-            string[] expression = input.Split()      ; // turn expression into array for easier iteration
+            string[] sa_expression = s_input.Split()    ; // turn expression into array for easier iteration
 
 
             // Evaluate the expression left to right
-            for(int i = 0; i < expression.Length; i++)
+            for(int i = 0; i < sa_expression.Length; i++)
             {
-                if(expression[i] == " " || expression[i] == "") // spaces/empty slots are ignored
-                {
+                if(sa_expression[i] == " " || sa_expression[i] == "") // spaces/empty slots are ignored
+                {                                                     // (this shouldn't be possible, but it's here just in case)
                     continue;
                 } // end if
 
-                double temp = 0; // temp storage for numbers
+                double d_temp = 0; // temp storage for numbers
 
                 // check if next is an operand or operator
-                if (double.TryParse(expression[i], out temp))
+                if (double.TryParse(sa_expression[i], out d_temp))
                 {
-                    stack.Push(temp);
+                    d_stack.Push(d_temp);  // numbers are put on the stack until an operand is found
                 } // end if
-
+                
                 else
                 {
-                    double a, b; // temp storage for operands
+                    double a, b;           // temp storage for operands
 
-                    if (stack.Count > 1) // take top two operands
+                    if (d_stack.Count > 1) // take top two operands if available
                     {
-                        a = stack.Pop();
-                        b = stack.Pop();
-                    }
+                        a = d_stack.Pop(); // operand 2
+                        b = d_stack.Pop(); // operand 1
+                    } // end if
                     else // expression is invalid
                     {
                         throw new ArgumentException("-1");
-                    }
+                    } // end else
 
                     // evaluate
-                    switch(expression[i])
+                    switch (sa_expression[i])
                     {
                         case ("+"):
-                            stack.Push(b + a);
+                            d_stack.Push(b + a);
                             break;
                         case ("-"):
-                            stack.Push(b - a);
+                            d_stack.Push(b - a);
                             break;
                         case ("*"):
-                            stack.Push(b * a);
+                            d_stack.Push(b * a);
                             break;
                         case ("/"):
                             if (a == 0) // division by 0
@@ -450,7 +454,7 @@ namespace Calculator_Rohde_Nick
                             } // end if
                             else
                             {
-                                stack.Push(b / a);
+                                d_stack.Push(b / a);
                             } // end else
                             break;
                         case ("^"):
@@ -458,7 +462,7 @@ namespace Calculator_Rohde_Nick
                             {
                                 throw new ArithmeticException("0^0");
                             } // end if
-                            stack.Push(Math.Pow(b,a));
+                            d_stack.Push(Math.Pow(b,a));
                             break;
                         default: // invalid operation
                             throw new ArgumentException("-1");
@@ -466,17 +470,17 @@ namespace Calculator_Rohde_Nick
                 } // end if
             } // end for
 
-            result = stack.Pop(); // result will be last item on the stack
+            d_result = d_stack.Pop(); // result will be last item on the stack
 
             // stack should now be empty, otherwise the expression was invalid
-            if (stack.Count > 0)
+            if (d_stack.Count > 0)
             {
                 throw new ArgumentException("-1");
-            }            
+            } // end if      
 
             // output result to user
             resultLabel.Text = "= ";
-            resultLabel.Text += result.ToString();
+            resultLabel.Text += d_result.ToString();
 
             // If the result string is very long, adjust font size
             if(resultLabel.Text.Length > 70)
@@ -590,7 +594,7 @@ namespace Calculator_Rohde_Nick
         {
             if (e.Message == "0^0")
             {
-                resultLabel.Text = display.Text + "= NaN";
+                resultLabel.Text = display.Text + " is an indeterminate form";
             } // end if
 
             MessageBox.Show("The expression you entered contains an invalid operation, and cannot be evaluated. Please try again.",
