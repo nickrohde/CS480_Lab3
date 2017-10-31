@@ -25,7 +25,9 @@ namespace Calculator_Rohde_Nick
 {
     public partial class Calculator : Form
     {
-        // Default constructor for Calculator
+        /// <summary>
+        /// Default Constructor. Initialises components, and puts the focus on the enter button.
+        /// </summary>
         public Calculator()
         {
             InitializeComponent();
@@ -39,6 +41,11 @@ namespace Calculator_Rohde_Nick
          * input contains illegal characters. Otherwise it sends the input to parseInput for syntax verification *
          * and evaluation. This method also handles all exceptions that may occur during program execution.      *
          * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+        /// <summary>
+        /// Initial input verification, and handles errors during execution.
+        /// </summary>
+        /// <param name="sender">Unused parameter.</param>
+        /// <param name="e">Unused parameter.</param>
         private void verifyInput(object sender, EventArgs e)
         {
             // Variables
@@ -96,6 +103,10 @@ namespace Calculator_Rohde_Nick
          * evaluateExpression function. Once the expression has been created, it calls evaluateExpression        *
          * and passes this expression to it.                                                                     *
          * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+         /// <summary>
+         /// Parses user input, and sends it to evaluateExpression if parsing was successful.
+         /// </summary>
+         /// <param name="s_input">String containing the user input, which will be parsed into an expression.</param>
         private void parseInput(string s_input)
         {
             // Variables
@@ -245,6 +256,11 @@ namespace Calculator_Rohde_Nick
          * detected, this method will throw an ArgumentException with the index (or -1) and the modified input   *
          * string. If no issues are detected, it returns the modified string to parseInput.                      *
          * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+         /// <summary>
+         /// Verifies that the input string contains a valid expression that can be parsed.
+         /// </summary>
+         /// <param name="s_input">Input string to be verified.</param>
+         /// <returns>A new string that contains a valid expression which can be parsed.</returns>
         private string isValidExpression(string s_input)
         {
             // Variables
@@ -319,7 +335,7 @@ namespace Calculator_Rohde_Nick
                     if (b_omittedMultiplyStart)
                     {
                         s_input = s_input.Insert(i, "*"); // insert a multiplication operator
-                        i++;                              // skip over the operator, no need check it
+                        i++;                              // skip over the inserted operator
                         b_omittedMultiplyStart = false;   // in case the last thing encountered was a parenthesis 
                         b_omittedMultiplyEnd   = false;   // in case the last thing encountered was a parenthesis
                     } // end if
@@ -394,7 +410,11 @@ namespace Calculator_Rohde_Nick
         } // end method isValidExpression
 
 
-        // Evaluates the postfix expression from parseInput
+        /// <summary>
+        /// Evaluates a postfix expression, and displays the result to the user.
+        /// </summary>
+        /// <param name="s_input">The postfix expression to be evaluated. Each operand/operator must be
+        /// separated by a single space to be valid.</param>
         private void evaluateExpression(string s_input)
         {
             // Variables
@@ -514,8 +534,12 @@ namespace Calculator_Rohde_Nick
         } // end method evaluateExpression
 
 
-        // Exception Handlers:
-        // ArgumentException handler
+        // Exception Handlers: All handlers display a message box to the user with a reason why the problem occurred.
+        /// <summary>
+        /// Handles Argument Exceptions thrown during program execution.
+        /// </summary>
+        /// <param name="exception">An argument exception that either contains no message, 
+        /// or an index and a reason, separated by a single space.</param>
         private void handleArgException(ArgumentException exception)
         {
             // Variables
@@ -579,7 +603,9 @@ namespace Calculator_Rohde_Nick
         } // end method handleArgException
 
 
-        // Division by zero handler
+        /// <summary>
+        /// Handles Division by 0 exceptions.
+        /// </summary>
         private void handleDivByZeroException()
         {
             MessageBox.Show("The expression you entered contains a division by 0. This is not a legal operation. Please try again.",
@@ -589,7 +615,10 @@ namespace Calculator_Rohde_Nick
         } // end method handleDivByZeroException
 
 
-        // Invalid Operation Handler
+        /// <summary>
+        /// Handles Arithmetic Exceptions s.a. indeterminate forms. 
+        /// </summary>
+        /// <param name="e">The exception with an error message. Used iff message is 0^0</param>
         private void handleArithmeticException(ArithmeticException e)
         {
             if (e.Message == "0^0")
@@ -602,7 +631,11 @@ namespace Calculator_Rohde_Nick
         } // end method handleArithmeticException
 
 
-        // Unknown exception handler
+        /// <summary>
+        /// Catch all exception handler for any other issues that may arise.
+        /// </summary>
+        /// <param name="e">Exception with message of what happened. Message is displayed to user
+        /// iff it is not a stack empty exception.</param>
         private void handleUnknownException(Exception e)
         {
             string message = "The expression you entered could not be evaluated.\n\nReason:\n";
@@ -727,7 +760,11 @@ namespace Calculator_Rohde_Nick
         } // end method periodPress
 
 
-        // Event handler for keyboard presses
+        /// <summary>
+        /// Handles keyboard presses. Only handles legal characters, all others are ignored.
+        /// </summary>
+        /// <param name="sender">Unused parameter.</param>
+        /// <param name="e">Key press event which must contain key that was pressed.</param>
         private void keyboardPress  (object sender, KeyPressEventArgs e)
         {
             char c_temp = e.KeyChar; // extract key from event
@@ -811,7 +848,11 @@ namespace Calculator_Rohde_Nick
         } // end method keyboardPress 
 
 
-        // Returns focus to enter button after other buttons are clicked in UI
+        /// <summary>
+        /// Returns focus to the enter key after another button has been pushed.
+        /// </summary>
+        /// <param name="sender">Unused parameter.</param>
+        /// <param name="e">Unused parameter.</param>
         private void focusEnterKey  (object sender, EventArgs e)
         {
             enter.Focus();

@@ -30,8 +30,7 @@ namespace Calculator_Rohde_Nick
         }
 
         /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
+        /// Required method for Designer support
         /// </summary>
         private void InitializeComponent()
         {
@@ -58,7 +57,7 @@ namespace Calculator_Rohde_Nick
             this.clear = new System.Windows.Forms.Button();
             this.period = new System.Windows.Forms.Button();
             this.resultLabel = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.backspace = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // display
@@ -326,17 +325,17 @@ namespace Calculator_Rohde_Nick
             this.resultLabel.TabIndex = 29;
             this.resultLabel.Enter += new System.EventHandler(this.focusEnterKey);
             // 
-            // button1
+            // backspace
             // 
-            this.button1.Font = new System.Drawing.Font("Lucida Bright", 12F, System.Drawing.FontStyle.Bold);
-            this.button1.Location = new System.Drawing.Point(450, 10);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(40, 38);
-            this.button1.TabIndex = 30;
-            this.button1.Text = "CE";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.backspacePress);
-            this.button1.Enter += new System.EventHandler(this.focusEnterKey);
+            this.backspace.Font = new System.Drawing.Font("Lucida Bright", 12F, System.Drawing.FontStyle.Bold);
+            this.backspace.Location = new System.Drawing.Point(450, 10);
+            this.backspace.Name = "backspace";
+            this.backspace.Size = new System.Drawing.Size(40, 38);
+            this.backspace.TabIndex = 30;
+            this.backspace.Text = "CE";
+            this.backspace.UseVisualStyleBackColor = true;
+            this.backspace.Click += new System.EventHandler(this.backspacePress);
+            this.backspace.Enter += new System.EventHandler(this.focusEnterKey);
             // 
             // Calculator
             // 
@@ -344,7 +343,7 @@ namespace Calculator_Rohde_Nick
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(502, 377);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.backspace);
             this.Controls.Add(this.resultLabel);
             this.Controls.Add(this.period);
             this.Controls.Add(this.clear);
@@ -378,29 +377,39 @@ namespace Calculator_Rohde_Nick
 
         }
 
-        private System.Windows.Forms.TextBox display;
-        private System.Windows.Forms.Button seven;
-        private System.Windows.Forms.Button eight;
-        private System.Windows.Forms.Button nine;
-        private System.Windows.Forms.Button plus;
-        private System.Windows.Forms.Button divide;
-        private System.Windows.Forms.Button four;
-        private System.Windows.Forms.Button five;
-        private System.Windows.Forms.Button six;
-        private System.Windows.Forms.Button openP;
-        private System.Windows.Forms.Button three;
-        private System.Windows.Forms.Button two;
-        private System.Windows.Forms.Button one;
-        private System.Windows.Forms.Button zero;
-        private System.Windows.Forms.Button times;
-        private System.Windows.Forms.Button enter;
-        private System.Windows.Forms.Button minus;
-        private System.Windows.Forms.Button closeP;
-        private System.Windows.Forms.Button exponentiate;
-        private System.Windows.Forms.Button clear;
-        private System.Windows.Forms.Button period;
-        private System.Windows.Forms.TextBox resultLabel;
-        private System.Windows.Forms.Button button1;
+        // Textboxes
+        private System.Windows.Forms.TextBox display     ; // input
+        private System.Windows.Forms.TextBox resultLabel ; // output
+
+        // Buttons:
+        // Numbers
+        private System.Windows.Forms.Button  one         ;
+        private System.Windows.Forms.Button  two         ;
+        private System.Windows.Forms.Button  three       ;
+        private System.Windows.Forms.Button  four        ;
+        private System.Windows.Forms.Button  five        ;
+        private System.Windows.Forms.Button  six         ;
+        private System.Windows.Forms.Button  seven       ;
+        private System.Windows.Forms.Button  eight       ;
+        private System.Windows.Forms.Button  nine        ;
+        private System.Windows.Forms.Button  zero        ;
+        private System.Windows.Forms.Button  period      ;
+        
+        // Operators
+        private System.Windows.Forms.Button  plus        ;
+        private System.Windows.Forms.Button  minus       ;
+        private System.Windows.Forms.Button  times       ;
+        private System.Windows.Forms.Button  divide      ;
+        private System.Windows.Forms.Button  exponentiate;
+
+        // Brackets
+        private System.Windows.Forms.Button  openP       ;
+        private System.Windows.Forms.Button  closeP      ;
+
+        // Operations
+        private System.Windows.Forms.Button  enter       ;
+        private System.Windows.Forms.Button  clear       ;
+        private System.Windows.Forms.Button  backspace   ;
     }
 }
 

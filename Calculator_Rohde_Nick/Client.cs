@@ -13,7 +13,7 @@ using System.Windows.Forms;
 
 namespace Calculator_Rohde_Nick
 {
-    static class Program
+    static class Client
     {
         /// <summary>
         /// The main entry point for the application.
