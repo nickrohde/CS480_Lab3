@@ -32,14 +32,15 @@ int executeCommand(string, string);
 int executeCommand(string, string, string);
 
 // Globals:
-int returnValue = 0;
+int returnValue = 0; // main return value
 
+// Main program loop
 int main(int argc, char* argv[])
 {
 	// Variables:
-	int			   i_exitCode = 0;
+	int			   i_exitCode = 0; // return code from internal calls
 
-	bool		   b_validCmd = false;
+	bool		   b_validCmd = false; 
 
 	string         s_cmd      = "";
 
@@ -47,30 +48,30 @@ int main(int argc, char* argv[])
 
 
 	printHello();
-	
-	
+
+
 
 	do
 	{
 		printPrompt();
 
 		s_cmd = waitForCommand();
-		commandVector = vectorizeCommand(s_cmd);
+		commandVector = vectorizeCommand(s_cmd); // split the command into a vector for checking
 
-		b_validCmd = isCommandValid(commandVector);
+		b_validCmd = isCommandValid(commandVector); // ensure command is valid
 
 		if (b_validCmd)
 		{
-			i_exitCode = executeCommand(commandVector);
+			i_exitCode = executeCommand(commandVector); 
 		} // end if
 
 		commandVector.clear();
-	} while (i_exitCode == 0);
+	} while (i_exitCode == 0); // exit call will break this loop
 
-	return ::returnValue;
+	return ::returnValue; // return global var
 } // end method main
 
-// Prints an initially introduction to the program
+// Prints an initial introduction to the program
 void printHello()
 {
 	cout << "Welcome to CWU Shell." << endl;
@@ -103,7 +104,7 @@ vector<string> vectorizeCommand(string s_cmd)
 	int i_start           = 0,
 	    i                 = 0;
 
-	bool b_noSpaceAllowed = false;
+	bool b_noSpaceAllowed = false; // for ignoring extra spaces
 
 	vector<string> args;
 	
@@ -113,7 +114,7 @@ vector<string> vectorizeCommand(string s_cmd)
 		if (s_cmd[i] == ' ' && !b_noSpaceAllowed)
 		{
 			b_noSpaceAllowed = true;
-			string s_temp = s_cmd.substr(i_start, i - i_start);			
+			string s_temp = s_cmd.substr(i_start, i - i_start);
 
 			args.push_back(s_temp);
 			i_start = i + 1;
@@ -124,14 +125,14 @@ vector<string> vectorizeCommand(string s_cmd)
 		} // end elif
 	} // end for
 
-	if (!b_noSpaceAllowed)
+	if (!b_noSpaceAllowed) // in case there were spaces after the command
 	{
 		string s_temp = s_cmd.substr(i_start, i - i_start);
 
 		args.push_back(s_temp);
 	} // end if	
 
-	// convert command to lower case to prevent error in validate function
+	// make cmd lower case to prevent issues with capital letters
 	std::transform(args.at(0).begin(), args.at(0).end(), args.at(0).begin(), ::tolower);
 
 	return args;
@@ -147,15 +148,17 @@ bool isCommandValid(vector<string>& commandArgs)
 
 	int    i_commandArgsSize = commandArgs.size();
 
-
+	// ensure valid number of args were sent
 	if (s_commandName == "exit")
 	{
 		if (i_commandArgsSize != 1 && i_commandArgsSize != 2)
 		{
 			printError(s_commandName, i_commandArgsSize - 1, 3);
 		} // end if
-
-		b_returnValue = true;
+		else
+		{
+			b_returnValue = true;
+		}
 	} // end if
 	else if (s_commandName == "mv")
 	{
@@ -212,8 +215,8 @@ bool isCommandValid(vector<string>& commandArgs)
 			b_returnValue = true;
 		} // end else
 	} // end elif
-	else if (s_commandName == "--h" || s_commandName == "--help")
-	{
+	else if (s_commandName == "--h" || s_commandName == "--help" || s_commandName == "911")
+	{	// help is handled directly
 		if(i_commandArgsSize == 1)
 		{
 			printHelp();
@@ -228,8 +231,9 @@ bool isCommandValid(vector<string>& commandArgs)
 		}
 	} // end elif
 	else if (s_commandName == "clear")
-	{
-		b_returnValue = true;
+	{	// clear is handled directly
+		cout << "\033c";
+		printHello();
 	} // end elif
 	else
 	{
@@ -343,7 +347,7 @@ void printSpecificHelp(string s_commandName)
 		cout << "cat <filename>              -- will print the contents of the file to the" << endl;
 		cout << "                               console." << endl << endl;
 	} // end elif
-	else if (s_commandName == "h" || s_commandName == "help" || s_commandName == "--h" || s_commandName == "--help")
+	else if (s_commandName == "h" || s_commandName == "help" || s_commandName == "--h" || s_commandName == "--help" || s_commandName == "911")
 	{
 		cout << "help <command>              -- displays the help, optional parameter <command>" << endl;
 		cout << "                               name of command to display help for, omitting" << endl;
@@ -360,7 +364,7 @@ void printSpecificHelp(string s_commandName)
 
 } // end method printSepcificHelp
 
-// Helper method
+// Helper method for executeCommand
 int executeCommand(vector<string>& commandVector)
 {
 	// Variables: 
@@ -393,7 +397,7 @@ int executeCommand(string s_cmdName)
 	
 	if (s_cmdName == "exit")
 	{
-		::returnValue = 0;
+		::returnValue = 0; // program return value
 		i_returnValue = 1; // exit main loop
 	} // end if
 
@@ -407,15 +411,9 @@ int executeCommand(string s_cmdName)
 		} // end if
 		else if(pid == 0)
 		{
-			execl("/bin/ls","ls", (char *)0);
+			execl("/bin/ls","ls", NULL);
 			exit(0);
 		}// end elif
-	} // end elif
-
-	else if (s_cmdName == "clear")
-	{
-		cout << "\033c";
-		printHello();
 	} // end elif
 
 	return i_returnValue;
@@ -454,7 +452,7 @@ int executeCommand(string s_cmdName, string s_arg1)
 		} // end if
 		else if(pid == 0)
 		{
-			cout << endl << execl("/usr/bin/tail","tail", s_arg1.c_str() , "5", (char *)0);
+			cout << endl << execl("/usr/bin/tail","tail", s_arg1.c_str() , "-n 5", (char *)0);
 			cout << endl;
 			exit(0);
 		}// end elif
@@ -552,7 +550,6 @@ int executeCommand(string s_cmdName, string s_arg1, string s_arg2)
 		// Variables:
 		int temp = -1;
 
-
 		if (stream >> temp && temp > 0)
 		{
 			pid_t pid = fork();
@@ -563,7 +560,7 @@ int executeCommand(string s_cmdName, string s_arg1, string s_arg2)
 			} // end if
 			else if(pid == 0)
 			{
-				execl("/bin/tail","tail", s_arg1.c_str(), s_arg2.c_str(), (char *)0);
+				execl("/usr/bin/tail","tail", s_arg1.c_str(), ("-n " + s_arg2).c_str(), (char*)0);
 				exit(0);
 			}// end elif
 		} // end if
