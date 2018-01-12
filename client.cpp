@@ -47,6 +47,8 @@ int main(int argc, char* argv[])
 
 
 	printHello();
+	
+	
 
 	do
 	{
@@ -73,7 +75,7 @@ void printHello()
 {
 	cout << "Welcome to CWU Shell." << endl;
 	cout << "Enter the command --h, or --help for information about the commands." << endl;
-	cout << "To quit CWU Shell, enter the command exit." << endl;
+	cout << "To quit CWU Shell, enter the command exit or press CTRL+C." << endl;
 } // end method printHello
 
 // Prints the prompt for the user to enter a command
@@ -278,18 +280,25 @@ void printHelp()
 {
 	cout << endl << "Help: " << endl;
 	cout << "command name <arguments>    -- description of command" << endl << endl;
-	cout << "exit <n>                    -- terminates the shell, optional parameter n will be the exit code of the shell" << endl << endl;
-	cout << "cat <filename>              -- will print the contents of the file to the console" << endl << endl;
-	cout << "mv <filename1> <filename2>  -- moves the contents of file with path filename1 into file with filename2" << endl;
-	cout << "                               e.g.: mv a.txt b.txt" << endl << endl;
-	cout << "ls                          -- lists the contents of the current directory e.g.: ls" << endl << endl;
-	cout << "cmp <filename1> <filename2> -- compares the contents of files with paths filename1 and filename2" << endl;
-	cout << "                               and returns the first byte where there is a difference" << endl;
+	cout << "exit <n>                    -- terminates the shell, optional parameter n will" << endl;
+	cout << "                               be the exit code of the shell alternatively" << endl;
+	cout << "                               press CTRL+C." << endl << endl;
+	cout << "cat <filename>              -- will print the contents of the file to the" << endl;
+	cout << "                               console." << endl << endl;
+	cout << "mv <filename1> <filename2>  -- moves the contents of file with path filename1" << endl;
+	cout << "                               into file with filename2 e.g.: mv a.txt b.txt" << endl << endl;
+	cout << "ls                          -- lists the contents of the current directory" << endl;
+	cout << "                               e.g.: ls " << endl << endl;
+	cout << "cmp <filename1> <filename2> -- compares the contents of files with paths" << endl;
+	cout << "                               filename1 and filename2 and returns the first" << endl;
+	cout << "                               byte where there is a difference." << endl;
 	cout << "                               e.g.: cmp a.txt b.txt" << endl << endl;
-	cout << "tail <filename> <n>         -- prints the last n lines from the file with path filename e.g.: tail a.txt 3" << endl;
-	cout << "                               parameter <n> is optional, ommitting it will default n to 5" << endl << endl;
-	cout << "help <command>              -- displays the help, optional parameter <command> name of command" << endl;
-	cout << "                               to display help for, omitting this will show help for all commands" << endl << endl;
+	cout << "tail <filename> <n>         -- prints the last n lines from the file with path" << endl;
+	cout << "                               filename e.g.: tail a.txt 3 parameter <n> is" << endl;
+	cout << "                               optional, ommittingit will default n to 5." << endl << endl;
+	cout << "help <command>              -- displays the help, optional parameter <command>" << endl;
+	cout << "                               name of command to display help for, omitting" << endl;
+	cout << "                               this will show help for all commands" << endl << endl;
 	cout << "clear                       -- clears the console window." << endl << endl;
 } // end method printHelp
 
@@ -297,40 +306,48 @@ void printHelp()
 void printSpecificHelp(string s_commandName)
 {
 	cout << endl << "Help for: " << s_commandName << endl;
-	cout     << "command name <arguments>    -- description of command" << endl;
+	cout         << "command name <arguments>    -- description of command" << endl;
 		
 	if (s_commandName == "exit")
 	{		
-		cout << "exit <n>                    -- terminates the shell, optional parameter n will be the exit code of the shell" << endl << endl;
+		cout << "exit <n>                    -- terminates the shell, optional parameter n will" << endl;
+		cout << "                               be the exit code of the shell alternatively" << endl;
+		cout << "                               press CTRL+C." << endl << endl;
+
 	} // end if
 	else if (s_commandName == "mv")
 	{
-		cout << "mv <filename1> <filename2>  -- moves the contents of file with path filename1 into file with filename2" << endl;
-		cout << "                               e.g.: mv a.txt b.txt" << endl << endl;
+		cout << "mv <filename1> <filename2>  -- moves the contents of file with path filename1" << endl;
+		cout << "                               into file with filename2 e.g.: mv a.txt b.txt" << endl << endl;
 	} // end elif
 	else if (s_commandName == "ls")
 	{
-		cout << "ls                          -- lists the contents of the current directory e.g.: ls" << endl << endl;
+		cout << "ls                          -- lists the contents of the current directory" << endl;
+		cout << "                               e.g.: ls " << endl << endl;
 	} // end elif
 	else if (s_commandName == "cmp")
 	{
-		cout << "cmp <filename1> <filename2> -- compares the contents of files with paths filename1 and filename2" << endl;
-		cout << "                               and returns the first byte where there is a difference" << endl;
+		cout << "cmp <filename1> <filename2> -- compares the contents of files with paths" << endl;
+		cout << "                               filename1 and filename2 and returns the first" << endl;
+		cout << "                               byte where there is a difference." << endl;
 		cout << "                               e.g.: cmp a.txt b.txt" << endl << endl;
 	} // end elif
 	else if (s_commandName == "tail")
 	{
-		cout << "tail <filename> <n>         -- prints the last n lines from the file with path filename e.g.: tail a.txt 3" << endl;
-		cout << "                               parameter <n> is optional, ommitting it will default n to 5" << endl << endl;
+		cout << "tail <filename> <n>         -- prints the last n lines from the file with path" << endl;
+		cout << "                               filename e.g.: tail a.txt 3 parameter <n> is" << endl;
+		cout << "                               optional, ommittingit will default n to 5." << endl << endl;
 	} // end elif
 	else if (s_commandName == "cat")
 	{
-		cout << "cat <filename>              -- will print the contents of the file to the console" << endl << endl;
+		cout << "cat <filename>              -- will print the contents of the file to the" << endl;
+		cout << "                               console." << endl << endl;
 	} // end elif
 	else if (s_commandName == "h" || s_commandName == "help" || s_commandName == "--h" || s_commandName == "--help")
 	{
-		cout << "help <command>              -- displays the help, optional parameter <command> name of command" << endl;
-		cout << "                               to display help for, omitting this will show help for all commands" << endl << endl;
+		cout << "help <command>              -- displays the help, optional parameter <command>" << endl;
+		cout << "                               name of command to display help for, omitting" << endl;
+		cout << "                               this will show help for all commands" << endl << endl;
 	} // end elif
 	else if (s_commandName == "clear")
 	{
@@ -338,7 +355,7 @@ void printSpecificHelp(string s_commandName)
 	} // end elif
 	else
 	{
-		cout << endl << "The command " << s_commandName << " was not recognized by help." << endl << endl;
+		cout << endl << s_commandName << " was not recognized by help." << endl << endl;
 	} // end else
 
 } // end method printSepcificHelp
@@ -398,6 +415,7 @@ int executeCommand(string s_cmdName)
 	else if (s_cmdName == "clear")
 	{
 		cout << "\033c";
+		printHello();
 	} // end elif
 
 	return i_returnValue;
@@ -515,12 +533,19 @@ int executeCommand(string s_cmdName, string s_arg1, string s_arg2)
 		}
 		else
 		{
-			
-		}
-		// check if arg2 file already exists
-		// if so ask user to verify overwrite
-		// then call mv with arg1 arg2
-	} // end if
+			pid_t pid = fork();
+		
+			if(pid > 0)
+			{
+				wait(NULL);
+			} // end if
+			else if(pid == 0)
+			{
+				execl("/bin/mv","mv", s_arg1.c_str(), s_arg2.c_str(), NULL);
+				exit(0);
+			} // end elif
+		} // end else
+	} // end if (s_cmdName == "mv")
 
 	else if (s_cmdName == "tail")
 	{
